@@ -55,6 +55,9 @@ class Ok(Result[T, E]):
     def __init__(self, value: T) -> None:
         self.value = value
 
+    def __eq__(self, other: object):
+        return isinstance(other, Ok) and self.value == other.value
+
     def __repr__(self) -> str:
         return f"<Ok {self.value}>"
 
@@ -62,6 +65,9 @@ class Ok(Result[T, E]):
 class Err(Result[T, E]):
     def __init__(self, err: E) -> None:
         self.err = err
+
+    def __eq__(self, other: object):
+        return isinstance(other, Err) and self.err == other.err
 
     def __repr__(self) -> str:
         return f"<Err {self.err}>"

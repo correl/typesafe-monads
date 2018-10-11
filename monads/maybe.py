@@ -43,6 +43,9 @@ class Just(Maybe[T]):
     def __init__(self, value: T) -> None:
         self.value = value
 
+    def __eq__(self, other: object):
+        return isinstance(other, Just) and self.value == other.value
+
     def __repr__(self) -> str:
         return f"<Just {self.value}>"
 
@@ -50,6 +53,9 @@ class Just(Maybe[T]):
 class Nothing(Maybe[T]):
     def __init__(self) -> None:
         ...
+
+    def __eq__(self, other: object):
+        return isinstance(other, Nothing)
 
     def __repr__(self) -> str:
         return "<Nothing>"

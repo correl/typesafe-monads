@@ -1,4 +1,4 @@
-from monads.maybe import Just, Nothing, maybe
+from monads.maybe import Maybe, Just, Nothing, maybe
 
 
 def test_maybe_none():
