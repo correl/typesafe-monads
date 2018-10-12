@@ -1,17 +1,14 @@
 from __future__ import annotations
 from typing import Any, Callable, Generic, TypeVar
 
+from .applicative import Applicative
 from .functor import Functor
 
 T = TypeVar("T")
 S = TypeVar("S")
 
 
-class Monad(Functor[T]):
-    @classmethod
-    def pure(cls, value: T) -> Monad[T]:
-        raise NotImplementedError
-
+class Monad(Applicative[T]):
     # FIXME: Callable return type set to Any, as the proper value
     # (Monad[S]) is reported as incompatible with subclass
     # implementations due to a flaw in mypy:

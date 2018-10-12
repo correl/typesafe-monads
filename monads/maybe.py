@@ -30,6 +30,13 @@ class Maybe(Monad[T]):
             new: Maybe[S] = Nothing()
             return new
 
+    def apply(self, functor: Maybe[Callable[[T], S]]) -> Maybe[S]:
+        if isinstance(functor, Just):
+            return self.map(functor.value)
+        else:
+            new: Maybe[S] = Nothing()
+            return new
+
     def withDefault(self, default: T) -> T:
         if isinstance(self, Just):
             return self.value

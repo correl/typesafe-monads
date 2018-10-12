@@ -41,6 +41,15 @@ class Result(Monad[T], Generic[T, E]):
         else:
             raise TypeError
 
+    def apply(self, functor: Result[Callable[[T], S], E]) -> Result[S, E]:
+        if isinstance(functor, Ok):
+            return self.map(functor.value)
+        elif isinstance(functor, Err):
+            new: Result[S, E] = Err(functor.err)
+            return new
+        else:
+            raise TypeError
+
     def withDefault(self, default: T) -> T:
         if isinstance(self, Ok):
             return self.value
