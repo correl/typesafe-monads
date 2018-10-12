@@ -22,7 +22,7 @@ class Result(Monad[T], Generic[T, E]):
         elif isinstance(self, Err):
             new: Result[S, E] = Err(self.err)
             return new
-        else:
+        else:  # pragma: no cover
             raise TypeError
 
     def map(self, function: Callable[[T], S]) -> Result[S, E]:
@@ -31,7 +31,7 @@ class Result(Monad[T], Generic[T, E]):
         elif isinstance(self, Err):
             new: Result[S, E] = Err(self.err)
             return new
-        else:
+        else:  # pragma: no cover
             raise TypeError
 
     def apply(self, functor: Result[Callable[[T], S], E]) -> Result[S, E]:
@@ -40,7 +40,7 @@ class Result(Monad[T], Generic[T, E]):
         elif isinstance(functor, Err):
             new: Result[S, E] = Err(functor.err)
             return new
-        else:
+        else:  # pragma: no cover
             raise TypeError
 
     def withDefault(self, default: T) -> T:
