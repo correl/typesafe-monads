@@ -1,18 +1,11 @@
 from __future__ import annotations
 from typing import Any, Callable, Generic, TypeVar
 
+from .monad import Monad
+
 T = TypeVar("T")
 S = TypeVar("S")
 E = TypeVar("E")
-
-
-class Monad(Generic[T]):
-    @classmethod
-    def pure(cls, value: T) -> Monad[T]:
-        raise NotImplementedError
-
-    def bind(self, function: Callable[[T], Any]) -> Monad[S]:
-        raise NotImplementedError
 
 
 class Result(Monad[T], Generic[T, E]):
