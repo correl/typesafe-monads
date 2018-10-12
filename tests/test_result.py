@@ -1,15 +1,53 @@
 from __future__ import annotations
+from typing import Callable
+
 from monads.result import Result, Ok, Err, safe
 
 
-def test_value() -> None:
-    result: Result[int, str] = Ok(5)
-    assert 5 == result.withDefault(0)
+def test_bind_ok() -> None:
+    m: Result[int, str] = Ok(5)
+    increment: Callable[[int], Result[int, str]] = lambda x: Ok(x + 1)
+    assert Ok(6) == m.bind(increment)
 
 
-def test_error() -> None:
-    result: Result[int, str] = Err("oops")
-    assert 0 == result.withDefault(0)
+def test_bind_err() -> None:
+    m: Result[int, str] = Err("oops")
+    increment: Callable[[int], Result[int, str]] = lambda x: Ok(x + 1)
+    assert Err("oops") == m.bind(increment)
+
+
+def test_apply_ok_to_ok() -> None:
+    m: Result[int, str] = Ok(5)
+    increment: Callable[[int], int] = lambda x: x + 1
+    assert Ok(6) == m.apply(Result.pure(increment))
+
+
+def test_apply_ok_to_err() -> None:
+    m: Result[int, str] = Err("oops")
+    increment: Callable[[int], int] = lambda x: x + 1
+    assert Err("oops") == m.apply(Result.pure(increment))
+
+
+def test_apply_err_to_ok() -> None:
+    m: Result[int, str] = Ok(5)
+    f: Result[Callable[[int], int], str] = Err("oops")
+    assert Err("oops") == m.apply(f)
+
+
+def test_apply_err_to_err() -> None:
+    m: Result[int, str] = Err("oops")
+    f: Result[Callable[[int], int], str] = Err("oops")
+    assert Err("oops") == m.apply(f)
+
+
+def test_ok_withdefault() -> None:
+    m: Result[int, str] = Ok(5)
+    assert 5 == m.withDefault(0)
+
+
+def test_err_withdefault() -> None:
+    m: Result[int, str] = Err("oops")
+    assert 0 == m.withDefault(0)
 
 
 def test_map() -> None:
@@ -55,3 +93,31 @@ def test_pipeline() -> None:
         >> (lambda res: Ok(len(res)))
     )
     assert 4 == result.withDefault(0)
+
+
+def test_unsafe_wrapped_function_returns_error() -> None:
+    error: Exception = Exception("oops")
+
+    @safe
+    def unsafe(x: int) -> int:
+        if x > 5:
+            raise error
+        else:
+            return x + 1
+
+    result: Result[int, Exception] = unsafe(10)
+    assert Err(error) == result
+
+
+def test_safe_wrapped_function_returns_ok() -> None:
+    error: Exception = Exception("oops")
+
+    @safe
+    def unsafe(x: int) -> int:
+        if x > 5:
+            raise error
+        else:
+            return x + 1
+
+    result: Result[int, Exception] = unsafe(5)
+    assert Ok(6) == result
