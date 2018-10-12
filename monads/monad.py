@@ -13,5 +13,5 @@ class Monad(Applicative[T]):
     # (Monad[S]) is reported as incompatible with subclass
     # implementations due to a flaw in mypy:
     # https://github.com/python/mypy/issues/1317
-    def bind(self, function: Callable[[T], Any]) -> Monad[S]:
+    def bind(self, function: Callable[[T], Any]) -> Monad[S]:  # pragma: no cover
         raise NotImplementedError

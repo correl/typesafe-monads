@@ -16,7 +16,7 @@ class Monad(Generic[T]):
 
 
 class Result(Monad[T], Generic[T, E]):
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # pragma: no cover
         raise NotImplementedError
 
     @classmethod
@@ -67,7 +67,7 @@ class Ok(Result[T, E]):
     def __eq__(self, other: object):
         return isinstance(other, Ok) and self.value == other.value
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return f"<Ok {self.value}>"
 
 
@@ -78,7 +78,7 @@ class Err(Result[T, E]):
     def __eq__(self, other: object):
         return isinstance(other, Err) and self.err == other.err
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return f"<Err {self.err}>"
 
 

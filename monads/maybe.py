@@ -9,7 +9,7 @@ E = TypeVar("E")
 
 
 class Maybe(Monad[T]):
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # pragma: no cover
         raise NotImplementedError
 
     @classmethod
@@ -54,7 +54,7 @@ class Just(Maybe[T]):
     def __eq__(self, other: object):
         return isinstance(other, Just) and self.value == other.value
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return f"<Just {self.value}>"
 
 
@@ -65,7 +65,7 @@ class Nothing(Maybe[T]):
     def __eq__(self, other: object):
         return isinstance(other, Nothing)
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return "<Nothing>"
 
 
@@ -88,7 +88,7 @@ class First(Monoid[Maybe[T]]):
         else:
             return other
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return f"<First {self.value}>"
 
     __add__ = mappend
@@ -109,7 +109,7 @@ class Last(Monoid[Maybe[T]]):
         else:
             return self
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return f"<Last {self.value}>"
 
     __add__ = mappend

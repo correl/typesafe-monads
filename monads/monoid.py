@@ -13,11 +13,11 @@ class Monoid(Generic[T]):
     # FIXME: Other type set to Any, as the proper value (Monoid[T]) is
     # reported as incompatible with subclass implementations due to a
     # flaw in mypy: https://github.com/python/mypy/issues/1317
-    def mappend(self, other: Any) -> Monoid[T]:
+    def mappend(self, other: Any) -> Monoid[T]:  # pragma: no cover
         raise NotImplementedError
 
     @classmethod
-    def mzero(cls) -> Monoid[T]:
+    def mzero(cls) -> Monoid[T]:  # pragma: no cover
         raise NotImplementedError
 
     @classmethod
