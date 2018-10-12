@@ -6,5 +6,5 @@ S = TypeVar("S")
 
 
 class Functor(Generic[T]):
-    def fmap(self, function: Callable[[T], S]) -> Functor[S]:
+    def map(self, function: Callable[[T], S]) -> Functor[S]:
         raise NotImplementedError

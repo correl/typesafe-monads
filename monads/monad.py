@@ -9,7 +9,7 @@ S = TypeVar("S")
 
 class Monad(Functor[T]):
     @classmethod
-    def unit(cls, value: T) -> Monad[T]:
+    def pure(cls, value: T) -> Monad[T]:
         raise NotImplementedError
 
     # FIXME: Callable return type set to Any, as the proper value

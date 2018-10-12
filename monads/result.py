@@ -8,7 +8,7 @@ E = TypeVar("E")
 
 class Monad(Generic[T]):
     @classmethod
-    def unit(cls, value: T) -> Monad[T]:
+    def pure(cls, value: T) -> Monad[T]:
         raise NotImplementedError
 
     def bind(self, function: Callable[[T], Any]) -> Monad[S]:
@@ -20,7 +20,7 @@ class Result(Monad[T], Generic[T, E]):
         raise NotImplementedError
 
     @classmethod
-    def unit(cls, value: T) -> Result[T, E]:
+    def pure(cls, value: T) -> Result[T, E]:
         return Ok(value)
 
     def bind(self, function: Callable[[T], Result[S, E]]) -> Result[S, E]:
@@ -32,9 +32,9 @@ class Result(Monad[T], Generic[T, E]):
         else:
             raise TypeError
 
-    def fmap(self, function: Callable[[T], S]) -> Result[S, E]:
+    def map(self, function: Callable[[T], S]) -> Result[S, E]:
         if isinstance(self, Ok):
-            return Result.unit(function(self.value))
+            return Result.pure(function(self.value))
         elif isinstance(self, Err):
             new: Result[S, E] = Err(self.err)
             return new
@@ -48,7 +48,7 @@ class Result(Monad[T], Generic[T, E]):
             return default
 
     __rshift__ = bind
-    __mul__ = __rmul__ = fmap
+    __mul__ = __rmul__ = map
 
 
 class Ok(Result[T, E]):

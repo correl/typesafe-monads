@@ -13,7 +13,7 @@ class Maybe(Monad[T]):
         raise NotImplementedError
 
     @classmethod
-    def unit(cls, value: T) -> Maybe[T]:
+    def pure(cls, value: T) -> Maybe[T]:
         return Just(value)
 
     def bind(self, function: Callable[[T], Maybe[S]]) -> Maybe[S]:
@@ -23,7 +23,7 @@ class Maybe(Monad[T]):
             new: Maybe[S] = Nothing()
             return new
 
-    def fmap(self, function: Callable[[T], S]) -> Maybe[S]:
+    def map(self, function: Callable[[T], S]) -> Maybe[S]:
         if isinstance(self, Just):
             return Just(function(self.value))
         else:
@@ -37,7 +37,7 @@ class Maybe(Monad[T]):
             return default
 
     __rshift__ = bind
-    __mul__ = __rmul__ = fmap
+    __mul__ = __rmul__ = map
 
 
 class Just(Maybe[T]):

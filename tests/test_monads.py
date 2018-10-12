@@ -9,31 +9,31 @@ def monad(request) -> Type:
 
 
 def test_bind(monad) -> None:
-    expected: Monad[int] = monad.unit(2)
-    assert expected == monad.unit(1).bind(lambda x: monad.unit(x + 1))
+    expected: Monad[int] = monad.pure(2)
+    assert expected == monad.pure(1).bind(lambda x: monad.pure(x + 1))
 
 
 def test_left_identity(monad) -> None:
     n: int = 3
 
     def f(n: int) -> Monad[int]:
-        return monad.unit(n * 3)
+        return monad.pure(n * 3)
 
-    assert monad.unit(n).bind(f) == f(n)
+    assert monad.pure(n).bind(f) == f(n)
 
 
 def test_right_identity(monad) -> None:
-    m: Monad[int] = monad.unit(3)
-    assert m == m.bind(lambda x: monad.unit(x))
+    m: Monad[int] = monad.pure(3)
+    assert m == m.bind(lambda x: monad.pure(x))
 
 
 def test_associativity(monad) -> None:
-    m: Monad[int] = monad.unit(3)
+    m: Monad[int] = monad.pure(3)
 
     def f(n: int) -> Monad[int]:
-        return monad.unit(n * 3)
+        return monad.pure(n * 3)
 
     def g(n: int) -> Monad[int]:
-        return monad.unit(n + 5)
+        return monad.pure(n + 5)
 
     assert m.bind(f).bind(g) == m.bind(lambda x: f(x).bind(g))

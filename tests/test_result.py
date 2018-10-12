@@ -12,13 +12,13 @@ def test_error() -> None:
     assert 0 == result.withDefault(0)
 
 
-def test_fmap() -> None:
+def test_map() -> None:
     result: Result[int, str] = Ok(5)
-    mapped: Result[str, str] = result.fmap(str)
+    mapped: Result[str, str] = result.map(str)
     assert "5" == mapped.withDefault("0")
 
 
-def test_fmap_infix() -> None:
+def test_map_infix() -> None:
     result: Result[int, str] = Ok(5)
     mapped: Result[str, str] = result * str
     assert "5" == mapped.withDefault("0")
