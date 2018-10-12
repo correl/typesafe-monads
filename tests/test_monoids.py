@@ -1,5 +1,6 @@
 import pytest  # type: ignore
 from typing import Any, Callable, Type
+
 from monads.monoid import Monoid
 from monads.maybe import First, Last, Just
 
