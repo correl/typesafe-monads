@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import Any, Callable, Generic, Optional, TypeVar
+from typing import Any, Callable, Generic, List, Optional, TypeVar
 from .monad import Monad
+from .monoid import Monoid
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -67,3 +68,45 @@ def maybe(value: T, predicate: Optional[Callable[[T], bool]] = None) -> Maybe[T]
         return Just(value)
     else:
         return Nothing()
+
+
+class First(Monoid[Maybe[T]]):
+    @classmethod
+    def mzero(cls) -> First:
+        return First(Nothing())
+
+    def mappend(self, other: First):
+        if isinstance(self.value, Just):
+            return self
+        else:
+            return other
+
+    def __repr__(self) -> str:
+        return f"<First {self.value}>"
+
+    __add__ = mappend
+
+
+def first(xs: List[Maybe[T]]) -> Maybe[T]:
+    return First.mconcat(map(lambda x: First(x), xs)).value
+
+
+class Last(Monoid[Maybe[T]]):
+    @classmethod
+    def mzero(cls) -> Last:
+        return Last(Nothing())
+
+    def mappend(self, other: Last):
+        if isinstance(other.value, Just):
+            return other
+        else:
+            return self
+
+    def __repr__(self) -> str:
+        return f"<Last {self.value}>"
+
+    __add__ = mappend
+
+
+def last(xs: List[Maybe[T]]) -> Maybe[T]:
+    return Last.mconcat(map(lambda x: Last(x), xs)).value

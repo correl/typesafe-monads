@@ -1,4 +1,6 @@
-from monads.maybe import Maybe, Just, Nothing, maybe
+import pytest  # type: ignore
+from typing import List
+from monads.maybe import Maybe, Just, Nothing, maybe, first, last
 
 
 def test_maybe_none():
@@ -15,3 +17,12 @@ def test_maybe_boolean_false():
 
 def test_maybe_boolean_true():
     assert isinstance(maybe(True, predicate=bool), Just)
+
+
+def test_first() -> None:
+    maybes: List[Maybe[int]] = [Nothing(), Just(1), Just(2)]
+    assert Just(1) == first(maybes)
+
+def test_last() -> None:
+    maybes: List[Maybe[int]] = [Just(1), Just(2), Nothing()]
+    assert Just(2) == last(maybes)
