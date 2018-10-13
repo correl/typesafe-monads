@@ -1,36 +1,51 @@
 import pytest  # type: ignore
-from typing import Any, Callable, Type
+from typing import Any, Callable, Tuple, Type
 
-from monads.monoid import Monoid
+from monads.list import List
+from monads.monoid import Monoid, String, Addition, Multiplication
 from monads.maybe import First, Last, Just
 
-Constructor = Callable[[Any], Monoid]
+Constructor = Tuple[Type, Callable[[Any], Any]]
 
 
 @pytest.fixture(
-    scope="module", params=[lambda x: First(Just(x)), lambda x: Last(Just(x))]
+    scope="module",
+    params=[
+        (First, lambda x: Just(x)),
+        (Last, lambda x: Just(x)),
+        (String, lambda x: str(x)),
+        (Addition, lambda x: x),
+        (Multiplication, lambda x: x),
+        (List, lambda x: [x]),
+    ],
 )
-def monoid(request) -> Constructor:
+def constructor(request) -> Constructor:
     return request.param
 
 
-def test_associative(monoid: Constructor) -> None:
-    a: Monoid = monoid(1)
-    b: Monoid = monoid(2)
-    c: Monoid = monoid(3)
+def construct(constructor: Constructor, value: Any) -> Monoid:
+    cls, builder = constructor
+    return cls(builder(value))
+
+
+def test_associative(constructor: Constructor) -> None:
+    a: Monoid = construct(constructor, 1)
+    b: Monoid = construct(constructor, 2)
+    c: Monoid = construct(constructor, 3)
 
     assert (a + b) + c == a + (b + c)
 
 
-def test_mconcat_empty(monoid: Constructor) -> None:
-    cls: Type = type(monoid(1))
+def test_mconcat_empty(constructor: Constructor) -> None:
+    cls, _ = constructor
     zero: Monoid = cls.mzero()
     assert zero == cls.mconcat([])
 
-def test_mconcat(monoid: Constructor) -> None:
-    cls: Type = type(monoid(1))
-    a: Monoid = monoid(1)
-    b: Monoid = monoid(2)
-    c: Monoid = monoid(3)
+
+def test_mconcat(constructor: Constructor) -> None:
+    cls, _ = constructor
+    a: Monoid = construct(constructor, 1)
+    b: Monoid = construct(constructor, 2)
+    c: Monoid = construct(constructor, 3)
     expected: Monoid = a.mappend(b).mappend(c)
     assert expected == cls.mconcat([a, b, c])
