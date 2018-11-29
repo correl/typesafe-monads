@@ -1,5 +1,8 @@
 # Type-safe Monads
 
+[![Build Status](https://travis-ci.com/correl/typesafe-monads.svg?branch=master)](https://travis-ci.com/correl/typesafe-monads)
+[![codecov](https://codecov.io/gh/correl/typesafe-monads/branch/master/graph/badge.svg)](https://codecov.io/gh/correl/typesafe-monads)
+
 This is an experiment in building monads in Python supported by strict
 type annotations. The goal is to be able to compose monads with the
 type checker ensuring their correctness.
