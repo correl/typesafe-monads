@@ -3,6 +3,7 @@ from setuptools import setup  # type: ignore
 with open("README.md", "r") as f:
     long_description = f.read()
 
+
 setup(
     name="typesafe-monads",
     version="0.2",
@@ -14,7 +15,7 @@ setup(
     url="https://github.com/correl/typesafe-monads",
     packages=["monads"],
     setup_requires=["pytest-runner"],
-    tests_require=["pytest", "mypy", "pytest-mypy"],
+    tests_require=["pytest", "mypy", "pytest-cov", "pytest-mypy"],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
