@@ -10,3 +10,11 @@ script:
   - python setup.py test
 after_success:
   - codecov
+deploy:
+  provider: pypi
+  user: correl
+  password:
+    secure: JwxQbfLuUW0wT6nYSSDBeRxLCkDJcyD5Jh5anfUJncGDM93O9fy+vSY2HhYTS3f8ZI42dQHicD+dG9TLiiU2I0BxiimEu2dRNxJGkkqeC7p97m4/+fPPXmLgaGyxFzqnU4vFNlDYtcd/jFQaQaT1PtaL2FVgJH0lEYoXGOa4T2MBDBqaJjbPtxFIUnEnpQsKDLBu2Pnj99z8zgTI5Ob7Rtt0RDT4lrt+A2bHHtIk3PAD6LKUebVFrQLr/XEOTDjzlkfqh3ZY3VH73OXWWXN41IJEYcEmnxDtWqT71VKD/bKPRsP2B/bIiB6fJSvmqkaoWenpizZglgW//WSQvt3nlAcZGGEHZ+0JsY/fKdTwF4ZPlPaOg+ssMt8OXkIGLk3wyPy0UUH6uMD6QkyPy/+9nRzqJv7UqQuyoqxwSmFpXvPQ07YErLakV+fGzKU4pqmRBQzAY+amj32ZNJuFKWuDMAU2xWilLnhtfdpxcwPDJxTetSCVMPr3nnYN9LWYckT9J14UfnN+OzgeLyoEpBuYe9DyB85wC2BIFizqRkxeDAmD/1cwh0Usjdb8gNzdIc8hUezarUkjEyUbgnnXMy1Zp0jrbMu8UVMIOpHpARVaz2BWTzpXEdef+NpDyQKs96kTooj7ezBnf7LU1Jam0haHhTZE4qkcGytjaL5qYLUYHRo=
+  distributions: sdist bdist_wheel
+  on:
+    tags: true
