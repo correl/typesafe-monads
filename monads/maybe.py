@@ -43,6 +43,13 @@ class Maybe(Monad[T]):
         else:
             return default
 
+    @classmethod
+    def fromList(self, xs: List[T]) -> Maybe[T]:
+        if xs:
+            return Just(xs[0])
+        else:
+            return Nothing()
+
     __rshift__ = bind
     __mul__ = __rmul__ = map
 

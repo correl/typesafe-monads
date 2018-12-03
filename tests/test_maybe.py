@@ -74,3 +74,11 @@ def test_first() -> None:
 def test_last() -> None:
     maybes: List[Maybe[int]] = [Just(1), Just(2), Nothing()]
     assert Just(2) == last(maybes)
+
+
+def test_from_empty_list() -> None:
+    assert Nothing() == Maybe.fromList([])
+
+
+def test_from_nonempty_list() -> None:
+    assert Just(2) == Maybe.fromList([2, 4, 6])

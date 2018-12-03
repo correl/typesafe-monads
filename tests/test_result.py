@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Callable
 
+from monads.maybe import Maybe, Just, Nothing
 from monads.result import Result, Ok, Err, safe
 
 
@@ -121,3 +122,25 @@ def test_safe_wrapped_function_returns_ok() -> None:
 
     result: Result[int, Exception] = unsafe(5)
     assert Ok(6) == result
+
+
+def test_from_just() -> None:
+    m: Maybe[int] = Just(6)
+    result: Result[int, str] = Result.fromMaybe(m, "error")
+    assert Ok(6) == result
+
+
+def test_from_nothing() -> None:
+    m: Maybe[int] = Nothing()
+    result: Result[int, str] = Result.fromMaybe(m, "error")
+    assert Err("error") == result
+
+
+def test_ok_to_maybe() -> None:
+    result: Result[int, str] = Ok(6)
+    assert Just(6) == result.toMaybe()
+
+
+def test_err_to_maybe() -> None:
+    result: Result[int, str] = Err("error")
+    assert Nothing() == result.toMaybe()

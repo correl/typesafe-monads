@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Any, Callable, Generic, TypeVar
 
 from .monad import Monad
+from .maybe import Maybe, Nothing
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -48,6 +49,13 @@ class Result(Monad[T], Generic[T, E]):
             return self.value
         else:
             return default
+
+    @classmethod
+    def fromMaybe(self, m: Maybe[T], error: E) -> Result[T, E]:
+        return m.map(Result.pure).withDefault(Err(error))
+
+    def toMaybe(self) -> Maybe[T]:
+        return self.map(Maybe.pure).withDefault(Nothing())
 
     __rshift__ = bind
     __mul__ = __rmul__ = map
