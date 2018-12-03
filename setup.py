@@ -6,7 +6,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="typesafe-monads",
-    version="0.2",
+    version="0.3",
     author="Correl Roush",
     author_email="correl@gmail.com",
     description="Type-annotated monad implementations for Python 3.7+",
