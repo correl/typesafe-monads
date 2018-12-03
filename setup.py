@@ -14,6 +14,8 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/correl/typesafe-monads",
     packages=["monads"],
+    package_data={"monads": ["py.typed"]},
+    include_package_data=True,
     setup_requires=["pytest-runner"],
     tests_require=["pytest", "mypy", "pytest-cov", "pytest-mypy"],
     classifiers=[
