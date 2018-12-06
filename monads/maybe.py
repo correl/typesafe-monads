@@ -44,6 +44,16 @@ class Maybe(Monad[T]):
             return default
 
     @classmethod
+    def fromResult(cls, m: Result[T, E]) -> Maybe[T]:
+        return m.map(Maybe.pure).withDefault(Nothing())
+
+    def toResult(self, error: E) -> Result[T, E]:
+        if isinstance(self, Just):
+            return Ok(self.value)
+        else:
+            return Err(error)
+
+    @classmethod
     def fromList(self, xs: List[T]) -> Maybe[T]:
         if xs:
             return Just(xs[0])
@@ -124,3 +134,7 @@ class Last(Monoid[Maybe[T]]):
 
 def last(xs: List[Maybe[T]]) -> Maybe[T]:
     return Last.mconcat(map(lambda x: Last(x), xs)).value
+
+
+# Import Result last to avoid a circular import error
+from .result import Result, Ok, Err

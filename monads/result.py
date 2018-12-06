@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import Any, Callable, Generic, TypeVar
 
 from .monad import Monad
-from .maybe import Maybe, Nothing
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -100,3 +99,7 @@ def safe(function: Callable[..., T]) -> Callable[..., Result[T, Exception]]:
             return Err(e)
 
     return wrapped
+
+
+# Import Maybe last to avoid a circular import error
+from .maybe import Maybe, Nothing

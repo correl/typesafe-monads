@@ -2,6 +2,7 @@ import pytest  # type: ignore
 from typing import Callable, List
 
 from monads.maybe import Maybe, Just, Nothing, maybe, first, last
+from monads.result import Ok, Err
 
 
 def test_bind_just() -> None:
@@ -82,3 +83,19 @@ def test_from_empty_list() -> None:
 
 def test_from_nonempty_list() -> None:
     assert Just(2) == Maybe.fromList([2, 4, 6])
+
+
+def test_from_ok() -> None:
+    assert Just(3) == Maybe.fromResult(Ok(3))
+
+
+def test_from_err() -> None:
+    assert Nothing() == Maybe.fromResult(Err("oops"))
+
+
+def test_just_to_result() -> None:
+    assert Ok(3) == Just(3).toResult("oops")
+
+
+def test_nothing_to_result() -> None:
+    assert Err("oops") == Nothing().toResult("oops")
