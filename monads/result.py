@@ -51,7 +51,7 @@ class Result(Monad[T], Generic[T, E]):
             return default
 
     @classmethod
-    def fromMaybe(self, m: Maybe[T], error: E) -> Result[T, E]:
+    def fromMaybe(cls, m: Maybe[T], error: E) -> Result[T, E]:
         return m.map(Result.pure).withDefault(Err(error))
 
     def toMaybe(self) -> Maybe[T]:
