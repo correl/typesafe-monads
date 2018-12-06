@@ -1,3 +1,5 @@
+from typing import Callable
+
 import pytest  # type: ignore
 
 from monads import Monad
@@ -7,6 +9,12 @@ from .fixtures import monad
 def test_bind(monad) -> None:
     expected: Monad[int] = monad.pure(2)
     assert expected == monad.pure(1).bind(lambda x: monad.pure(x + 1))
+
+
+def test_bind_rshift_operator(monad) -> None:
+    m: Monad[int] = monad.pure(2)
+    f: Callable[[int], Monad[int]] = lambda x: monad.pure(x + 1)
+    assert m.bind(f) == m >> f
 
 
 def test_left_identity(monad) -> None:

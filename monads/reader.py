@@ -43,6 +43,9 @@ class Reader(Monad[T], Generic[Env, T]):
         name = self.function.__name__
         return f"<Reader {module}.{name}>"
 
+    __mul__ = __rmul__ = map
+    __rshift__ = bind
+
 
 class Curried(Reader[Env, T]):
     def __call__(self, *args):

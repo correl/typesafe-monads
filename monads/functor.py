@@ -8,3 +8,5 @@ S = TypeVar("S")
 class Functor(Generic[T]):
     def map(self, function: Callable[[T], S]) -> Functor[S]:  # pragma: no cover
         raise NotImplementedError
+
+    __mul__ = __rmul__ = map

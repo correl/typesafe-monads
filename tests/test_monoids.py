@@ -28,6 +28,12 @@ def construct(constructor: Constructor, value: Any) -> Monoid:
     return cls(builder(value))
 
 
+def test_mappend_add_operator(constructor: Constructor) -> None:
+    a: Monoid = construct(constructor, 1)
+    b: Monoid = construct(constructor, 2)
+    assert a.mappend(b) == a + b
+
+
 def test_associative(constructor: Constructor) -> None:
     a: Monoid = construct(constructor, 1)
     b: Monoid = construct(constructor, 2)

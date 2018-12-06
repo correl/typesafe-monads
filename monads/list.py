@@ -34,3 +34,5 @@ class List(Monad[T], Monoidal[list]):
         return List(self.value + other.value)
 
     __add__ = mappend
+    __mul__ = __rmul__ = map
+    __rshift__ = bind

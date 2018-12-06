@@ -15,3 +15,5 @@ class Monad(Applicative[T]):
     # https://github.com/python/mypy/issues/1317
     def bind(self, function: Callable[[T], Any]) -> Monad[S]:  # pragma: no cover
         raise NotImplementedError
+
+    __rshift__ = bind
