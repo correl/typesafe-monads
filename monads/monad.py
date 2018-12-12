@@ -18,7 +18,7 @@ class Monad(Applicative[T]):
         raise NotImplementedError
 
     @classmethod
-    def pure(cls, value: T) -> Monad[T]:
+    def pure(cls, value: T) -> Monad[T]:  # pragma: no cover
         raise NotImplementedError
 
     @classmethod

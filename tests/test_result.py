@@ -63,9 +63,14 @@ def test_map_infix() -> None:
     assert "5" == mapped.withDefault("0")
 
 
-def test_map_error() -> None:
+def test_map_error_err() -> None:
     m: Result[int, str] = Err("oops")
     assert Err(4) == m.mapError(len)
+
+
+def test_map_error_ok() -> None:
+    m: Result[int, str] = Ok(123)
+    assert Ok(123) == m.mapError(len)
 
 
 def test_bind() -> None:
