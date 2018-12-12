@@ -61,6 +61,7 @@ class Maybe(Monad[T]):
             return Nothing()
 
     __rshift__ = bind
+    __and__ = lambda other, self: Maybe.apply(self, other)
     __mul__ = __rmul__ = map
 
 

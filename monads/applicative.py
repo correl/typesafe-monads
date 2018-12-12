@@ -18,3 +18,5 @@ class Applicative(Functor[T]):
     # https://github.com/python/mypy/issues/1317
     def apply(self, functor: Any) -> Functor[S]:  # pragma: no cover
         raise NotImplementedError
+
+    __and__ = lambda other, self: Applicative.apply(self, other)

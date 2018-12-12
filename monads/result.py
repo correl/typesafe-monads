@@ -65,6 +65,7 @@ class Result(Monad[T], Generic[T, E]):
         return self.map(Maybe.pure).withDefault(Nothing())
 
     __rshift__ = bind
+    __and__ = lambda other, self: Result.apply(self, other)
     __mul__ = __rmul__ = map
 
 
