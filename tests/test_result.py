@@ -63,6 +63,11 @@ def test_map_infix() -> None:
     assert "5" == mapped.withDefault("0")
 
 
+def test_map_error() -> None:
+    m: Result[int, str] = Err("oops")
+    assert Err(4) == m.mapError(len)
+
+
 def test_bind() -> None:
     result: Result[int, str] = Ok(5)
     incremented: Result[int, str] = result.bind(lambda x: Ok(x + 1))

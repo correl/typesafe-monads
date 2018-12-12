@@ -34,6 +34,14 @@ class Result(Monad[T], Generic[T, E]):
         else:  # pragma: no cover
             raise TypeError
 
+    def mapError(self, function: Callable[[E], S]) -> Result[T, S]:
+        if isinstance(self, Err):
+            return Err(function(self.err))
+        elif isinstance(self, Ok):
+            return Ok(self.value)
+        else:  # pragma: no cover
+            raise TypeError
+
     def apply(self, functor: Result[Callable[[T], S], E]) -> Result[S, E]:
         if isinstance(functor, Ok):
             return self.map(functor.value)
