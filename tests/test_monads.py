@@ -41,3 +41,9 @@ def test_associativity(monad) -> None:
         return monad.pure(n + 5)
 
     assert m.bind(f).bind(g) == m.bind(lambda x: f(x).bind(g))
+
+
+def test_sequence(monad) -> None:
+    assert monad.pure([1, 2, 3]) == monad.sequence(
+        [monad.pure(1), monad.pure(2), monad.pure(3)]
+    )
