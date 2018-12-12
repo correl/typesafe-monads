@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/correl/typesafe-monads.svg?branch=master)](https://travis-ci.com/correl/typesafe-monads)
 [![codecov](https://codecov.io/gh/correl/typesafe-monads/branch/master/graph/badge.svg)](https://codecov.io/gh/correl/typesafe-monads)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 This is an experiment in building monads in Python supported by strict
 type annotations. The goal is to be able to compose monads with the

@@ -17,7 +17,14 @@ setup(
     package_data={"monads": ["py.typed"]},
     include_package_data=True,
     setup_requires=["pytest-runner"],
-    tests_require=["pytest", "mypy", "pytest-cov", "pytest-mypy"],
+    tests_require=[
+        "pytest",
+        "black",
+        "mypy",
+        "pytest-cov",
+        "pytest-black",
+        "pytest-mypy",
+    ],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
