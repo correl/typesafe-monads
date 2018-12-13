@@ -150,6 +150,12 @@ Represents a sequence of items.
 
 - Also implements `Monoid`.
 
+### Future[T]
+
+Represents an asynchronous action.
+
+- Also implements `Awaitable`.
+
 ### Reader[T]
 
 Represents the application of a function to it's argument.

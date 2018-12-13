@@ -1,6 +1,6 @@
 import pytest  # type: ignore
 from typing import Type
-from monads import Maybe, List, Result
+from monads import Maybe, List, Result, Future
 
 
 @pytest.fixture(scope="module", params=[Maybe, List, Result])
