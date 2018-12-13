@@ -21,6 +21,7 @@ setup(
         "pytest",
         "black",
         "mypy",
+        "pytest-asyncio",
         "pytest-cov",
         "pytest-black",
         "pytest-mypy",
