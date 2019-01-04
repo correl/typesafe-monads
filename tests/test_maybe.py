@@ -5,6 +5,17 @@ from monads.maybe import Maybe, Just, Nothing, maybe, first, last
 from monads.result import Ok, Err
 
 
+def test_types() -> None:
+    m: Maybe[int] = Maybe.pure(1)
+    map: Maybe[int] = m.map(lambda x: x)
+    map_operator: Maybe[int] = m * (lambda x: x)
+    bind: Maybe[int] = m.bind(lambda x: Maybe.pure(x))
+    bind_operator: Maybe[int] = m >> (lambda x: Maybe.pure(x))
+    apply: Maybe[int] = m.apply(Maybe.pure(lambda x: x))
+    apply_operator: Maybe[int] = Maybe.pure(lambda x: x) & m
+    sequence: Maybe[List[int]] = Maybe.sequence([m])
+
+
 def test_bind_just() -> None:
     m: Maybe[int] = Just(5)
     increment: Callable[[int], Maybe[int]] = lambda x: Just(x + 1)

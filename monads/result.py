@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import Any, Callable, Generic, TypeVar
+import functools
+from typing import Any, Callable, Generic, Iterable, List, TypeVar
 
 from .monad import Monad
 
@@ -50,6 +51,16 @@ class Result(Monad[T], Generic[T, E]):
             return new
         else:  # pragma: no cover
             raise TypeError
+
+    @classmethod
+    def sequence(cls, xs: Iterable[Result[T, E]]) -> Maybe[List[T]]:
+        """Evaluate monadic actions in sequence, collecting results."""
+
+        def mcons(acc: Result[List[T], E], x: Result[T, E]) -> Result[List[T], E]:
+            return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
+
+        empty: Result[List[T], E] = cls.pure([])
+        return functools.reduce(mcons, xs, empty)
 
     def withDefault(self, default: T) -> T:
         if isinstance(self, Ok):

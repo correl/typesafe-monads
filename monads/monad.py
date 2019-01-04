@@ -21,13 +21,13 @@ class Monad(Applicative[T]):
     def pure(cls, value: T) -> Monad[T]:  # pragma: no cover
         raise NotImplementedError
 
+    # FIXME: Iterable type set to Any, as the proper value (Monad[T])
+    # is reported as incompatible with subclass implementations due to
+    # a flaw in mypy: https://github.com/python/mypy/issues/1317
     @classmethod
-    def sequence(cls, xs: Iterable[Monad[T]]) -> Monad[List[T]]:
+    def sequence(cls, xs: Iterable[Any]) -> Monad[List[T]]:  # pragma: no cover
         """Evaluate monadic actions in sequence, collecting results."""
 
-        def reducer(acc: Monad[List[T]], x: Monad[T]) -> Monad[List[T]]:
-            return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
-
-        return functools.reduce(reducer, xs, cls.pure([]))
+        raise NotImplementedError
 
     __rshift__ = bind

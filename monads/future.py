@@ -1,6 +1,6 @@
 from __future__ import annotations
-import asyncio
-from typing import Awaitable, Callable, TypeVar, Union
+import functools
+from typing import Awaitable, Callable, Iterable, List, TypeVar, Union
 from .monad import Monad
 
 T = TypeVar("T")
@@ -49,6 +49,16 @@ class Future(Monad[T]):
             return y
 
         return Future(bind(function, self.awaitable))
+
+    @classmethod
+    def sequence(cls, xs: Iterable[Future[T]]) -> Future[List[T]]:
+        """Evaluate monadic actions in sequence, collecting results."""
+
+        def mcons(acc: Future[List[T]], x: Future[T]) -> Future[List[T]]:
+            return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
+
+        empty: Future[List[T]] = cls.pure([])
+        return functools.reduce(mcons, xs, empty)
 
     def __await__(self):
         return self.awaitable.__await__()

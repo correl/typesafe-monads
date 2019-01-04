@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import Any, Callable, Generic, List, Optional, TypeVar
+import functools
+from typing import Any, Callable, Generic, Iterable, List, Optional, TypeVar
 from .monad import Monad
 from .monoid import Monoid
 
@@ -36,6 +37,16 @@ class Maybe(Monad[T]):
         else:
             new: Maybe[S] = Nothing()
             return new
+
+    @classmethod
+    def sequence(cls, xs: Iterable[Maybe[T]]) -> Maybe[List[T]]:
+        """Evaluate monadic actions in sequence, collecting results."""
+
+        def mcons(acc: Maybe[List[T]], x: Maybe[T]) -> Maybe[List[T]]:
+            return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
+
+        empty: Maybe[List[T]] = cls.pure([])
+        return functools.reduce(mcons, xs, empty)
 
     def withDefault(self, default: T) -> T:
         if isinstance(self, Just):

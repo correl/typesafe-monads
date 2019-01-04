@@ -1,7 +1,7 @@
 from __future__ import annotations
 from functools import reduce
 from itertools import chain
-from typing import Callable, TypeVar
+from typing import Callable, Iterable, List as _List, TypeVar
 
 from .monad import Monad
 from .monoid import Monoidal
@@ -25,6 +25,16 @@ class List(Monad[T], Monoidal[list]):
         return List(
             list(chain.from_iterable([map(f, self.value) for f in functor.value]))
         )
+
+    @classmethod
+    def sequence(cls, xs: Iterable[List[T]]) -> List[_List[T]]:
+        """Evaluate monadic actions in sequence, collecting results."""
+
+        def mcons(acc: List[_List[T]], x: List[T]) -> List[_List[T]]:
+            return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
+
+        empty: List[_List[T]] = cls.pure([])
+        return reduce(mcons, xs, empty)
 
     @classmethod
     def mzero(cls) -> List[T]:

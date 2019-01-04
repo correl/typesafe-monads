@@ -1,11 +1,31 @@
 import pytest  # type: ignore
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, List, TypeVar
 
 from monads import Functor, Applicative, Future
 from monads.reader import curry
 
 T = TypeVar("T")
 S = TypeVar("S")
+
+
+@pytest.mark.asyncio
+async def test_types() -> None:
+    m: Future[int] = Future.pure(1)
+    await m
+    map: Future[int] = Future.pure(1).map(lambda x: x)
+    await map
+    map_operator: Future[int] = Future.pure(1) * (lambda x: x)
+    await map_operator
+    bind: Future[int] = Future.pure(1).bind(lambda x: Future.pure(x))
+    await bind
+    bind_operator: Future[int] = Future.pure(1) >> (lambda x: Future.pure(x))
+    await bind_operator
+    apply: Future[int] = Future.pure(1).apply(Future.pure(lambda x: x))
+    await apply
+    apply_operator: Future[int] = Future.pure(lambda x: x) & Future.pure(1)
+    await apply_operator
+    sequence: Future[List[int]] = Future.sequence([Future.pure(1)])
+    await sequence
 
 
 @pytest.mark.asyncio

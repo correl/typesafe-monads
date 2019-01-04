@@ -1,11 +1,22 @@
 import pytest  # type: ignore
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, List, TypeVar
 
 from monads import Functor, Applicative, Reader
 from monads.reader import curry
 
 T = TypeVar("T")
 S = TypeVar("S")
+
+
+def test_types() -> None:
+    m: Reader[Any, int] = Reader.pure(1)
+    map: Reader[Any, int] = m.map(lambda x: x)
+    map_operator: Reader[Any, int] = m * (lambda x: x)
+    bind: Reader[Any, int] = m.bind(lambda x: Reader.pure(x))
+    bind_operator: Reader[Any, int] = m >> (lambda x: Reader.pure(x))
+    apply: Reader[Any, int] = m.apply(Reader.pure(lambda x: x))
+    apply_operator: Reader[Any, int] = Reader.pure(lambda x: x) & m
+    sequence: Reader[Any, List[int]] = Reader.sequence([m])
 
 
 def test_functor_identity() -> None:
