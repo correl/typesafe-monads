@@ -47,11 +47,12 @@ class Future(Monad[T]):
         return Future(bind(function, self.awaitable))
 
     @classmethod
-    def sequence(cls, xs: Iterable[Future[T]]) -> Future[List[T]]:
+    def sequence(cls, xs: Iterable[Awaitable[T]]) -> Future[List[T]]:
         """Evaluate monadic actions in sequence, collecting results."""
 
-        def mcons(acc: Future[List[T]], x: Future[T]) -> Future[List[T]]:
-            return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
+        def mcons(acc: Future[List[T]], x: Awaitable[T]) -> Future[List[T]]:
+            future: Future[T] = x if isinstance(x, Future) else Future(x)
+            return acc.bind(lambda acc_: future.map(lambda x_: acc_ + [x_]))
 
         empty: Future[List[T]] = cls.pure([])
         return functools.reduce(mcons, xs, empty)
