@@ -17,15 +17,11 @@ class Future(Monad[T]):
         self.awaitable = awaitable
 
     @classmethod
-    def pure(cls, value: Union[T, Awaitable[T]]) -> Future[T]:
-        if isinstance(value, Awaitable):
-            return Future(value)
-        else:
+    def pure(cls, value: T) -> Future[T]:
+        async def identity(x: T) -> T:
+            return x
 
-            async def identity(x: T) -> T:
-                return x
-
-            return Future(identity(value))
+        return Future(identity(value))
 
     def map(self, function: Callable[[T], S]) -> Future[S]:
         async def map(f: Callable[[T], S], x: Awaitable[T]) -> S:

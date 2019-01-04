@@ -29,16 +29,6 @@ async def test_types() -> None:
 
 
 @pytest.mark.asyncio
-async def test_pure_accepts_values_or_awaitables() -> None:
-    async def three() -> int:
-        return 3
-
-    a: Future[int] = Future.pure(3)
-    b: Future[int] = Future.pure(three())
-    assert await a == await b
-
-
-@pytest.mark.asyncio
 async def test_functor_identity() -> None:
     identity: Callable[[int], int] = lambda x: x
     assert await Future.pure(3) == await Future.pure(3).map(identity)
