@@ -56,19 +56,3 @@ class Reader(Monad[T], Generic[Env, T]):
     __mul__ = __rmul__ = map
     __rshift__ = bind
     __and__ = lambda other, self: Reader.apply(self, other)
-
-
-class Curried(Reader[Env, T]):
-    def __call__(self, *args):
-        return reduce(lambda f, x: f(x), args, self.function)
-
-
-def curry(f: Callable):
-    def wrapped(args, remaining):
-        if remaining == 0:
-            return f(*args)
-        else:
-            curried = lambda x: wrapped(args + [x], remaining - 1)
-            return Curried(update_wrapper(curried, f))
-
-    return wrapped([], f.__code__.co_argcount)

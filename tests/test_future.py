@@ -2,7 +2,6 @@ import pytest  # type: ignore
 from typing import Any, Callable, List, TypeVar
 
 from monads import Functor, Applicative, Future
-from monads.reader import curry
 
 T = TypeVar("T")
 S = TypeVar("S")

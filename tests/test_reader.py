@@ -2,7 +2,6 @@ import pytest  # type: ignore
 from typing import Any, Callable, List, TypeVar
 
 from monads import Functor, Applicative, Reader
-from monads.reader import curry
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -87,18 +86,3 @@ def test_monad_associativity() -> None:
         return Reader.pure(n + 5)
 
     assert m.bind(f).bind(g)(0) == m.bind(lambda x: f(x).bind(g))(0)
-
-
-def test_curry() -> None:
-    def add3(a, b, c):
-        return a + b + c
-
-    assert add3(1, 2, 3) == curry(add3)(1)(2)(3)
-
-
-def test_call_curried_function_with_multiple_arguments() -> None:
-    @curry
-    def add3(a, b, c):
-        return a + b + c
-
-    assert add3(1, 2)(3) == add3(1, 2, 3)
