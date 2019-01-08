@@ -1,3 +1,4 @@
+import inspect
 import pytest  # type: ignore
 from typing import Any, Callable, List, TypeVar
 
@@ -86,3 +87,7 @@ def test_monad_associativity() -> None:
         return Reader.pure(n + 5)
 
     assert m.bind(f).bind(g)(0) == m.bind(lambda x: f(x).bind(g))(0)
+
+
+def test_pure_annotation_includes_concrete_type() -> None:
+    assert int == inspect.signature(Reader.pure(5)).return_annotation

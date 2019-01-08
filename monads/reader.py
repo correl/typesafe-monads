@@ -1,5 +1,6 @@
 from __future__ import annotations
 from functools import reduce, update_wrapper
+import inspect
 from typing import Any, Callable, Generic, Iterable, List, TypeVar
 
 from .monad import Monad
@@ -20,8 +21,22 @@ class Reader(Monad[T], Generic[Env, T]):
 
     @classmethod
     def pure(cls, value: T) -> Reader[Env, T]:
-        f: F = lambda x: value
-        return cls(f)
+        class constant:
+            def __call__(self, _: Env) -> T:
+                return value
+
+            # Update the signature's return annotation to reflect the
+            # concrete type of the wrapped value.
+            __signature__ = inspect.Signature(
+                [
+                    inspect.Parameter(
+                        "_", inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=Any
+                    )
+                ],
+                return_annotation=type(value),
+            )
+
+        return cls(constant())
 
     def map(self, function: Callable[[T], S]) -> Reader[Env, S]:
         f: Callable[[Env], S] = lambda x: function(self.function(x))
@@ -51,7 +66,8 @@ class Reader(Monad[T], Generic[Env, T]):
     def __repr__(self):  # pragma: no cover
         module = self.function.__module__
         name = self.function.__name__
-        return f"<Reader {module}.{name}>"
+        signature = inspect.signature(self)
+        return f"<Reader {module}.{name}{signature}>"
 
     __mul__ = __rmul__ = map
     __rshift__ = bind
