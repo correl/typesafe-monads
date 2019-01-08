@@ -16,7 +16,7 @@ Result = TypeVar("Result")
 class Curried(Reader[A, Result]):
     def __repr__(self):  # pragma: no cover
         module = self.function.__module__
-        name = self.function.__name__
+        name = getattr(self.function, "__name__", repr(self.function))
         signature = inspect.signature(self)
         return f"<Curried {module}.{name}{signature}>"
 

@@ -66,7 +66,7 @@ class Reader(Monad[T], Generic[Env, T]):
 
     def __repr__(self):  # pragma: no cover
         module = self.function.__module__
-        name = self.function.__name__
+        name = getattr(self.function, "__name__", repr(self.function))
         signature = inspect.signature(self)
         return f"<Reader {module}.{name}{signature}>"
 
