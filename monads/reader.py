@@ -27,6 +27,7 @@ class Reader(Monad[T], Generic[Env, T]):
 
             # Update the signature's return annotation to reflect the
             # concrete type of the wrapped value.
+            __name__ = "constant"
             __signature__ = inspect.Signature(
                 [
                     inspect.Parameter(
