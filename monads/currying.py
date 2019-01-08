@@ -13,11 +13,19 @@ E = TypeVar("E")
 Result = TypeVar("Result")
 
 
-class CurriedUnary(Reader[A, Result]):
+class Curried(Reader[A, Result]):
+    def __repr__(self):  # pragma: no cover
+        module = self.function.__module__
+        name = self.function.__name__
+        signature = inspect.signature(self)
+        return f"<Curried {module}.{name}{signature}>"
+
+
+class CurriedUnary(Curried[A, Result]):
     ...
 
 
-class CurriedBinary(Reader[A, CurriedUnary[B, Result]]):
+class CurriedBinary(Curried[A, CurriedUnary[B, Result]]):
     @overload
     def __call__(self, environment: A) -> CurriedUnary[B, Result]:
         ...
@@ -30,7 +38,7 @@ class CurriedBinary(Reader[A, CurriedUnary[B, Result]]):
         return reduce(lambda f, x: f(x), args, self.function)
 
 
-class CurriedTernary(Reader[A, CurriedBinary[B, C, Result]]):
+class CurriedTernary(Curried[A, CurriedBinary[B, C, Result]]):
     @overload
     def __call__(self, environment: A) -> CurriedBinary[B, C, Result]:
         ...
@@ -47,7 +55,7 @@ class CurriedTernary(Reader[A, CurriedBinary[B, C, Result]]):
         return reduce(lambda f, x: f(x), args, self.function)
 
 
-class CurriedQuaternary(Reader[A, CurriedTernary[B, C, D, Result]]):
+class CurriedQuaternary(Curried[A, CurriedTernary[B, C, D, Result]]):
     @overload
     def __call__(self, environment: A) -> CurriedTernary[B, C, D, Result]:
         ...
@@ -68,7 +76,7 @@ class CurriedQuaternary(Reader[A, CurriedTernary[B, C, D, Result]]):
         return reduce(lambda f, x: f(x), args, self.function)
 
 
-class CurriedQuinary(Reader[A, CurriedQuaternary[B, C, D, E, Result]]):
+class CurriedQuinary(Curried[A, CurriedQuaternary[B, C, D, E, Result]]):
     @overload
     def __call__(self, environment: A) -> CurriedQuaternary[B, C, D, E, Result]:
         ...
