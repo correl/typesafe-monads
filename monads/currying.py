@@ -1,4 +1,5 @@
 from functools import reduce, update_wrapper
+import inspect
 from typing import Callable, Generic, NewType, TypeVar, overload
 
 from .reader import Reader
@@ -120,22 +121,31 @@ def curry(
 
 
 def curry(f):
+    signature = inspect.signature(f)
+    parameters = list(signature.parameters.values())
+
     def wrapped(args, remaining):
         if remaining < 1:
             raise ValueError("Function must take one or more positional arguments")
         elif remaining == 1:
-            curried = lambda x: f(*(args + [x]))
-            return CurriedUnary(update_wrapper(curried, f))
+            curried = update_wrapper(lambda x: f(*(args + [x])), f)
+            curried.__signature__ = signature.replace(
+                parameters=parameters[-remaining:]
+            )
+            return CurriedUnary(curried)
         else:
-            curried = lambda x: wrapped(args + [x], remaining - 1)
+            curried = update_wrapper(lambda x: wrapped(args + [x], remaining - 1), f)
+            curried.__signature__ = signature.replace(
+                parameters=parameters[-remaining:]
+            )
             if remaining == 2:
-                return CurriedBinary(update_wrapper(curried, f))
+                return CurriedBinary(curried)
             elif remaining == 3:
-                return CurriedTernary(update_wrapper(curried, f))
+                return CurriedTernary(curried)
             elif remaining == 4:
-                return CurriedQuaternary(update_wrapper(curried, f))
+                return CurriedQuaternary(curried)
             elif remaining == 5:
-                return CurriedQuinary(update_wrapper(curried, f))
+                return CurriedQuinary(curried)
             else:
                 raise ValueError("Cannot curry a function with more than 5 arguments")
 
