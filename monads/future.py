@@ -60,6 +60,9 @@ class Future(Monad[T]):
     def __await__(self):
         return self.awaitable.__await__()
 
+    def __repr__(self):
+        return f"<Future {self.awaitable}>"
+
     __rshift__ = bind
     __and__ = lambda other, self: Future.apply(self, other)
     __mul__ = __rmul__ = map
