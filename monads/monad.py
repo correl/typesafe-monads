@@ -30,4 +30,7 @@ class Monad(Applicative[T]):
 
         raise NotImplementedError
 
+    def map(self, function: Callable[[T], S]) -> Monad[S]:  # pragma: no cover
+        raise NotImplementedError
+
     __rshift__ = bind

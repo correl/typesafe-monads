@@ -1,6 +1,16 @@
 from __future__ import annotations
 import functools
-from typing import Any, Callable, Generic, Iterable, List, Optional, TypeVar
+from typing import (
+    Any,
+    Awaitable,
+    Callable,
+    Generic,
+    Iterable,
+    List,
+    Optional,
+    Type,
+    TypeVar,
+)
 from . import result
 from .monad import Monad
 from .monoid import Monoid
@@ -97,6 +107,58 @@ class Nothing(Maybe[T]):
 
     def __repr__(self) -> str:  # pragma: no cover
         return "<Nothing>"
+
+
+M = TypeVar("M", bound=Monad[Maybe])
+
+
+class MaybeT(Monad[T], Generic[M, T]):
+    def __init__(self, value: Monad[Maybe[T]]) -> None:
+        raise NotImplementedError
+
+
+def transformer(outer: Type[M]) -> Type[MaybeT[M, T]]:
+    M = TypeVar("M", bound=Monad[Maybe])
+    T = TypeVar("T")
+
+    class _MaybeT(MaybeT[M, T]):
+        def __init__(self, value: Monad[Maybe[T]]) -> None:
+            self.value = value
+
+        @classmethod
+        def pure(cls, value: T) -> MaybeT[M, T]:
+            return _MaybeT(outer.pure(Maybe.pure(value)))
+
+        def map(self, function: Callable[[T], S]) -> _MaybeT[M, S]:
+            return _MaybeT(self.value.map(lambda inner: inner.map(function)))
+
+        def bind(self, function: Callable[[T], _MaybeT[M, S]]) -> _MaybeT[M, S]:
+            def bind_inner(inner: Maybe[T]) -> Monad[Maybe[S]]:
+                if isinstance(inner, Just):
+                    return function(inner.value).value
+                else:
+                    empty: Maybe[S] = Nothing()
+                    return outer.pure(empty)
+
+            return _MaybeT(self.value.bind(bind_inner))
+
+        def __repr__(self):
+            return f"<MaybeT {self.value}>"
+
+        if hasattr(outer, "__await__"):
+
+            def __await__(self) -> Maybe[T]:
+                if isinstance(self.value, Awaitable):
+                    return self.value.__await__()
+                else:
+                    raise TypeError("Not awaitable")
+
+    return _MaybeT
+
+
+def transform(outer: Type[M], instance: Monad[Maybe[T]]) -> MaybeT[M, T]:
+    Transformer: Type[MaybeT[M, T]] = transformer(outer)
+    return Transformer(instance)
 
 
 def maybe(value: T, predicate: Optional[Callable[[T], bool]] = None) -> Maybe[T]:
