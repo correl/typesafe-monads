@@ -2,6 +2,7 @@ from __future__ import annotations
 import functools
 from typing import Any, Callable, Generic, Iterable, List, TypeVar
 
+from . import maybe
 from .monad import Monad
 
 T = TypeVar("T")
@@ -53,7 +54,7 @@ class Result(Monad[T], Generic[T, E]):
             raise TypeError
 
     @classmethod
-    def sequence(cls, xs: Iterable[Result[T, E]]) -> Maybe[List[T]]:
+    def sequence(cls, xs: Iterable[Result[T, E]]) -> Result[List[T], E]:
         """Evaluate monadic actions in sequence, collecting results."""
 
         def mcons(acc: Result[List[T], E], x: Result[T, E]) -> Result[List[T], E]:
@@ -69,11 +70,11 @@ class Result(Monad[T], Generic[T, E]):
             return default
 
     @classmethod
-    def fromMaybe(cls, m: Maybe[T], error: E) -> Result[T, E]:
+    def fromMaybe(cls, m: maybe.Maybe[T], error: E) -> Result[T, E]:
         return m.map(Result.pure).withDefault(Err(error))
 
-    def toMaybe(self) -> Maybe[T]:
-        return self.map(Maybe.pure).withDefault(Nothing())
+    def toMaybe(self) -> maybe.Maybe[T]:
+        return self.map(maybe.Maybe.pure).withDefault(maybe.Nothing())
 
     __rshift__ = bind
     __and__ = lambda other, self: Result.apply(self, other)
@@ -119,7 +120,3 @@ def safe(function: Callable[..., T]) -> Callable[..., Result[T, Exception]]:
             return Err(e)
 
     return wrapped
-
-
-# Import Maybe last to avoid a circular import error
-from .maybe import Maybe, Nothing

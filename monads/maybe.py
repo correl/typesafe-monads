@@ -1,6 +1,7 @@
 from __future__ import annotations
 import functools
 from typing import Any, Callable, Generic, Iterable, List, Optional, TypeVar
+from . import result
 from .monad import Monad
 from .monoid import Monoid
 
@@ -55,14 +56,14 @@ class Maybe(Monad[T]):
             return default
 
     @classmethod
-    def fromResult(cls, m: Result[T, E]) -> Maybe[T]:
+    def fromResult(cls, m: result.Result[T, E]) -> Maybe[T]:
         return m.map(Maybe.pure).withDefault(Nothing())
 
-    def toResult(self, error: E) -> Result[T, E]:
+    def toResult(self, error: E) -> result.Result[T, E]:
         if isinstance(self, Just):
-            return Ok(self.value)
+            return result.Ok(self.value)
         else:
-            return Err(error)
+            return result.Err(error)
 
     @classmethod
     def fromList(self, xs: List[T]) -> Maybe[T]:
@@ -146,7 +147,3 @@ class Last(Monoid[Maybe[T]]):
 
 def last(xs: List[Maybe[T]]) -> Maybe[T]:
     return Last.mconcat(map(lambda x: Last(x), xs)).value
-
-
-# Import Result last to avoid a circular import error
-from .result import Result, Ok, Err
