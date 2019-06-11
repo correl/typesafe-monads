@@ -66,6 +66,19 @@ class Maybe(Monad[T]):
             return result.Err(error)
 
     @classmethod
+    def fromOptional(cls, value: Optional[T]) -> Maybe[T]:
+        if value is None:
+            return Nothing()
+        else:
+            return Just(value)
+
+    def toOptional(self) -> Optional[T]:
+        if isinstance(self, Just):
+            return self.value
+        else:
+            return None
+
+    @classmethod
     def fromList(self, xs: List[T]) -> Maybe[T]:
         if xs:
             return Just(xs[0])

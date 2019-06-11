@@ -1,6 +1,6 @@
 from __future__ import annotations
 import functools
-from typing import Any, Callable, Generic, Iterable, List, TypeVar
+from typing import Any, Callable, Generic, Iterable, List, Optional, TypeVar
 
 from . import maybe
 from .monad import Monad
@@ -75,6 +75,19 @@ class Result(Monad[T], Generic[T, E]):
 
     def toMaybe(self) -> maybe.Maybe[T]:
         return self.map(maybe.Maybe.pure).withDefault(maybe.Nothing())
+
+    @classmethod
+    def fromOptional(cls, value: Optional[T], error: E) -> Result[T, E]:
+        if value is None:
+            return Err(error)
+        else:
+            return Ok(value)
+
+    def toOptional(self) -> Optional[T]:
+        if isinstance(self, Ok):
+            return self.value
+        else:
+            return None
 
     __rshift__ = bind
     __and__ = lambda other, self: Result.apply(self, other)

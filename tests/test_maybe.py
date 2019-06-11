@@ -110,3 +110,19 @@ def test_just_to_result() -> None:
 
 def test_nothing_to_result() -> None:
     assert Err("oops") == Nothing().toResult("oops")
+
+
+def test_from_optional_value() -> None:
+    assert Just(2) == Maybe.fromOptional(2)
+
+
+def test_from_optional_none() -> None:
+    assert Nothing() == Maybe.fromOptional(None)
+
+
+def test_just_to_optional() -> None:
+    assert 2 == Just(2).toOptional()
+
+
+def test_nothing_to_optional() -> None:
+    assert None == Nothing().toOptional()

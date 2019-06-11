@@ -165,3 +165,19 @@ def test_ok_to_maybe() -> None:
 def test_err_to_maybe() -> None:
     result: Result[int, str] = Err("error")
     assert Nothing() == result.toMaybe()
+
+
+def test_from_optional_value() -> None:
+    assert Just(2) == Maybe.fromOptional(2)
+
+
+def test_from_optional_none() -> None:
+    assert Err("error") == Result.fromOptional(None, "error")
+
+
+def test_ok_to_optional() -> None:
+    assert 2 == Ok(2).toOptional()
+
+
+def test_err_to_optional() -> None:
+    assert None == Err("error").toOptional()
