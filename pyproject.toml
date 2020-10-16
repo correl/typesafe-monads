@@ -1,13 +1,30 @@
-[tool.black]
-line-length = 88
-py36 = true
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.mypy_cache
-  | build
-  | dist
-)/
-'''
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry]
+name = "typesafe-monads"
+version = "0.8"
+description = "Type-annotated monad implementations for Python 3.7+"
+authors = ["Correl Roush <correl@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [
+    { include = "monads" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+tornado = "^6"
+
+[tool.poetry.dev-dependencies]
+black = { version = "*", allow-prereleases = true }
+flake8 = "*"
+mypy = "*"
+pytest-asyncio = "*"
+pytest-black = "*"
+pytest-cov = "*"
+pytest-mypy = "*"
+
+[tool.pytest.ini_options]
+addopts = "--black --mypy --cov monads --cov-report xml:reports/coverage.xml"
