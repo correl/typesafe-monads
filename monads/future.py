@@ -63,7 +63,9 @@ class Future(Monad[T]):
 
     __rshift__ = bind
 
-    def __and__(self, other: Awaitable[Callable[[T], S]]) -> Future[S]:  # pragma: no cover
+    def __and__(
+        self, other: Awaitable[Callable[[T], S]]
+    ) -> Future[S]:  # pragma: no cover
         return Future.apply(self, other)
 
     __mul__ = __rmul__ = map
