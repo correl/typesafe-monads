@@ -9,5 +9,6 @@ exclude = '''
   | \.mypy_cache
   | build
   | dist
+  | env
 )/
 '''
