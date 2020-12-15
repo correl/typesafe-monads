@@ -6,13 +6,13 @@ with open("README.md", "r") as f:
 
 setup(
     name="typesafe-monads",
-    version="0.8",
-    author="Correl Roush",
-    author_email="correl@gmail.com",
+    version="0.9",
+    author="Correl Roush, Sam Reghenzi",
+    author_email="correl@gmail.com, sammyrulez@gmail.com",
     description="Type-annotated monad implementations for Python 3.7+",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/correl/typesafe-monads",
+    url="https://github.com/sammyrulez/typesafe-monads",
     packages=["monads"],
     package_data={"monads": ["py.typed"]},
     include_package_data=True,
