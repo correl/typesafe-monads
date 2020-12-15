@@ -22,9 +22,15 @@ jobs:
           python-version: "3.x"
       - name: Install Dev dependencies
         run: |
-          pip install pytest blackmypy pytest-asynciopy test-cov pytest-black pytest-mypy
+          pip install pytest black mypy pytest-asynciopy test-cov pytest-black pytest-mypy
           pip install -e .
       - name: Run Tests
         run: python setup.py test
-     
+      - uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.xml 
+          flags: unittests 
+          fail_ci_if_error: true 
+          verbose: true 
+          
 
