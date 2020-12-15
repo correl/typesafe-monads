@@ -46,7 +46,8 @@ class Maybe(Monad[T]):
         def mcons(acc: Maybe[List[T]], x: Maybe[T]) -> Maybe[List[T]]:
             return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
 
-        empty: Maybe[List[T]] = cls.pure([])
+        empty_list: List[T] = []
+        empty: Maybe[List[T]] = Just(empty_list)
         return functools.reduce(mcons, xs, empty)
 
     def withDefault(self, default: T) -> T:
@@ -85,8 +86,10 @@ class Maybe(Monad[T]):
         else:
             return Nothing()
 
+    def __and__(self, other: Maybe[Callable[[T], S]]) -> Maybe[S]:  # pragma: no cover
+        return Maybe.apply(self, other)
+
     __rshift__ = bind
-    __and__ = lambda other, self: Maybe.apply(self, other)
     __mul__ = __rmul__ = map
 
 
