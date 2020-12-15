@@ -27,23 +27,24 @@ class List(Monad[T], Monoidal[list]):
         )
 
     @classmethod
+    def mzero(cls) -> List[T]:
+        return cls(list())
+
+    @classmethod
     def sequence(cls, xs: Iterable[List[T]]) -> List[_List[T]]:
         """Evaluate monadic actions in sequence, collecting results."""
 
         def mcons(acc: List[_List[T]], x: List[T]) -> List[_List[T]]:
             return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
 
-        empty: List[_List[T]] = cls.pure([])
-        return reduce(mcons, xs, empty)
+        return reduce(mcons, xs, List.mzero())
 
-    @classmethod
-    def mzero(cls) -> List[T]:
-        return cls(list())
+    def __and__(self, other: List[Callable[[T], S]]) -> List[S]:  # pragma: no cover
+        return List.apply(self, other)
 
     def mappend(self, other: List[T]) -> List[T]:
         return List(self.value + other.value)
 
     __add__ = mappend
-    __and__ = lambda other, self: List.apply(self, other)
     __mul__ = __rmul__ = map
     __rshift__ = bind
