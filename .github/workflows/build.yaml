@@ -15,9 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: webfactory/ssh-agent@v0.2.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -29,6 +26,5 @@ jobs:
           pip install -e .
       - name: Run Tests
         run: python setup.py test
-      - name: Check coverage
-        run: codecov
+     
 
