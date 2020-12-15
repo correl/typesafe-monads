@@ -54,12 +54,16 @@ class Future(Monad[T]):
             future: Future[T] = x if isinstance(x, Future) else Future(x)
             return acc.bind(lambda acc_: future.map(lambda x_: acc_ + [x_]))
 
-        empty: Future[List[T]] = cls.pure([])
+        empty_list: List[T] = []
+        empty: Future[List[T]] = Future.pure(empty_list)
         return functools.reduce(mcons, xs, empty)
 
     def __await__(self):
         return self.awaitable.__await__()
 
     __rshift__ = bind
-    __and__ = lambda other, self: Future.apply(self, other)
+
+    def __and__(self, other: Awaitable[Callable[[T], S]]) -> Future[S]:  # pragma: no cover
+        return Future.apply(self, other)
+
     __mul__ = __rmul__ = map
