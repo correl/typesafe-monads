@@ -1,7 +1,7 @@
 # Type-safe Monads
 
-[![Build Status](https://travis-ci.com/correl/typesafe-monads.svg?branch=master)](https://travis-ci.com/correl/typesafe-monads)
-[![codecov](https://codecov.io/gh/correl/typesafe-monads/branch/master/graph/badge.svg)](https://codecov.io/gh/correl/typesafe-monads)
+![Build](https://github.com/sammyrulez/typesafe-monads/workflows/Build/badge.svg)
+[![codecov](https://codecov.io/gh/sammyrulez/typesafe-monads/branch/master/graph/badge.svg)](https://codecov.io/gh/sammyrulez/typesafe-monads)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 This is an experiment in building monads in Python supported by strict
@@ -17,6 +17,8 @@ strong type system. I've attempted to use libraries like
 lack of type constraints preventing incorrect usage. I could've
 attempted to add type annotations to one of those libraries, but
 building my own is more fun.
+
+This is a fork of the original work by  [Correl Roush](http://correl.phoenixinquis.net/)
 
 
 ## Base Classes
