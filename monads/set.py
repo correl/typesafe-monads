@@ -3,6 +3,7 @@ from functools import reduce
 from itertools import chain
 from monads import functor, List
 from typing import (
+    Any,
     Callable,
     Iterable,
     Iterator,
@@ -25,9 +26,16 @@ S = TypeVar("S")
 class Set(Monad[T], Monoidal[set]):
     @classmethod
     def pure(cls, value: T) -> Set[T]:
-        t = set()
-        t.add(value)
-        return Set(t)
+        def unpack(k: T) -> set:
+            s: set = set()
+            if isinstance(k, Iterable):
+                for v in k:
+                    s.union(unpack(v))
+            else:
+                s.add(k)
+            return s
+
+        return Set(unpack(value))
 
     def bind(self, function: Callable[[T], Set[S]]) -> Set[S]:
         return reduce(Set.mappend, map(function, self.value), Set.mzero())
