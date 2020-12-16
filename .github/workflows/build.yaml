@@ -53,6 +53,11 @@ jobs:
 
       - name: Check Output Parameters
         run: echo "Got version ${{ steps.release.outputs.tag_name }}"
+      - name: Print Version
+        run:
+          sed -i '$ d' monads/__init__.py 
+          echo "version='${{ steps.release.outputs.tag_name }}'" >>  monads/__init__.py   
+          sed -i '9s/.*/  version="${{ steps.release.outputs.tag_name }}"/' setup.py 
 
 
           
