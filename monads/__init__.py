@@ -6,4 +6,5 @@ from .maybe import Maybe, Just, Nothing
 from .result import Result, Ok, Err
 from .future import Future
 from .reader import Reader
-version=1
+
+version = 1
