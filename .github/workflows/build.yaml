@@ -22,8 +22,10 @@ jobs:
           python-version: "3.x"
       - name: Install Dev dependencies
         run: |
+          echo {{github.ref}}
           pip install pytest black mypy pytest-asyncio pytest-cov pytest-black pytest-mypy
           pip install -e .
+
       - name: Run Tests
         run: python setup.py test
       - uses: codecov/codecov-action@v1
@@ -37,7 +39,6 @@ jobs:
     name: Build Release
     runs-on: ubuntu-latest
     needs: checking
-    if:  github.ref == 'ref/head/master' 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
