@@ -28,12 +28,15 @@ def test_curried_function_annotation_drops_arguments_as_it_is_applied() -> None:
     def add3(a: int, b: int, c: int) -> int:
         return a + b + c
 
-    assert inspect.Signature(
-        [
-            inspect.Parameter(
-                param, inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=int
-            )
-            for param in ["b", "c"]
-        ],
-        return_annotation=int,
-    ) == inspect.signature(curry(add3)(1))
+    assert (
+        inspect.Signature(
+            [
+                inspect.Parameter(
+                    param, inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=int
+                )
+                for param in ["b", "c"]
+            ],
+            return_annotation=int,
+        )
+        == inspect.signature(curry(add3)(1))
+    )

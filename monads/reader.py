@@ -58,7 +58,8 @@ class Reader(Monad[T], Generic[Env, T]):
         def mcons(acc: Reader[Env, List[T]], x: Reader[Env, T]) -> Reader[Env, List[T]]:
             return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
 
-        empty: Reader[Env, List[T]] = cls.pure([])
+        empty_list: List[T] = []
+        empty: Reader[Env, List[T]] = Reader.pure(empty_list)
         return reduce(mcons, xs, empty)
 
     def __eq__(self, other: object):  # pragma: no cover
@@ -70,6 +71,7 @@ class Reader(Monad[T], Generic[Env, T]):
         signature = inspect.signature(self)
         return f"<Reader {module}.{name}{signature}>"
 
+    __and__ = lambda other, self: Reader.apply(self, other)  # type: ignore
+
     __mul__ = __rmul__ = map
     __rshift__ = bind
-    __and__ = lambda other, self: Reader.apply(self, other)

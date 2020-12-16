@@ -22,6 +22,7 @@ class List(Monad[T], Monoidal[list]):
         return List(list(map(function, self.value)))
 
     def apply(self, functor: List[Callable[[T], S]]) -> List[S]:
+
         return List(
             list(chain.from_iterable([map(f, self.value) for f in functor.value]))
         )
@@ -37,10 +38,10 @@ class List(Monad[T], Monoidal[list]):
         def mcons(acc: List[_List[T]], x: List[T]) -> List[_List[T]]:
             return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
 
-        return reduce(mcons, xs, List.mzero())
+        empty: List[_List[T]] = List.pure([])
+        return reduce(mcons, xs, empty)
 
-    def __and__(self, other: List[Callable[[T], S]]) -> List[S]:  # pragma: no cover
-        return List.apply(self, other)
+    __and__ = lambda other, self: List.apply(self, other)  # type: ignore
 
     def mappend(self, other: List[T]) -> List[T]:
         return List(self.value + other.value)

@@ -60,7 +60,7 @@ class Result(Monad[T], Generic[T, E]):
         def mcons(acc: Result[List[T], E], x: Result[T, E]) -> Result[List[T], E]:
             return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
 
-        empty: Result[List[T], E] = cls.pure([])
+        empty: Result[List[T], E] = Result.pure([])
         return functools.reduce(mcons, xs, empty)
 
     def withDefault(self, default: T) -> T:
@@ -89,8 +89,9 @@ class Result(Monad[T], Generic[T, E]):
         else:
             return None
 
+    __and__ = lambda other, self: Result.apply(self, other)  # type: ignore
+
     __rshift__ = bind
-    __and__ = lambda other, self: Result.apply(self, other)
     __mul__ = __rmul__ = map
 
 

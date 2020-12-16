@@ -18,4 +18,5 @@ def test_apply_and_operator(monad) -> None:
     subtract: Callable[[int], Callable[[int], int]] = lambda x: lambda y: x - y
     ten = monad.pure(10)
     six = monad.pure(6)
-    assert six.apply(ten.map(subtract)) == subtract * ten & six
+    functor = ten.map(subtract)
+    assert six.apply(functor) == subtract * ten & six

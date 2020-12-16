@@ -86,8 +86,7 @@ class Maybe(Monad[T]):
         else:
             return Nothing()
 
-    def __and__(self, other: Maybe[Callable[[T], S]]) -> Maybe[S]:  # pragma: no cover
-        return Maybe.apply(self, other)
+    __and__ = lambda other, self: Maybe.apply(self, other)  # type: ignore
 
     __rshift__ = bind
     __mul__ = __rmul__ = map
