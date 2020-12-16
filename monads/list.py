@@ -1,10 +1,21 @@
 from __future__ import annotations
 from functools import reduce
 from itertools import chain
-from typing import Callable, Iterable, List as _List, TypeVar
+from monads import functor
+from typing import (
+    Callable,
+    Iterable,
+    Iterator,
+    List as _List,
+    Optional,
+    TypeVar,
+    Union,
+    cast,
+)
 
 from .monad import Monad
 from .monoid import Monoidal
+from .currying import CurriedBinary, uncurry
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -41,6 +52,31 @@ class List(Monad[T], Monoidal[list]):
         empty: List[_List[T]] = List.pure([])
         return reduce(mcons, xs, empty)
 
+    def flatten(self) -> List[T]:
+        def flat(acc: List[T], element: T) -> List[T]:
+            if element and isinstance(element, Iterable):
+                for k in element:
+                    acc = acc.mappend(List([k]))
+            elif element:
+                acc = acc.mappend(List([element]))
+            return acc
+
+        return List(reduce(flat, self, List.mzero()))  # type: ignore
+
+    def sort(self, key: Optional[str] = None, reverse: bool = False) -> List[T]:
+        lst_copy = self.value.copy()
+        lst_copy.sort(key=key, reverse=reverse)  # type: ignore
+        return List(lst_copy)
+
+    def fold(
+        self, func: Union[Callable[[S, T], S], CurriedBinary[S, T, S]], base_val: S
+    ) -> S:
+        if isinstance(func, CurriedBinary):
+            functor = uncurry(cast(CurriedBinary, func))
+        else:
+            functor = func
+        return reduce(functor, self.value, base_val)  # type: ignore
+
     __and__ = lambda other, self: List.apply(self, other)  # type: ignore
 
     def mappend(self, other: List[T]) -> List[T]:
@@ -49,3 +85,12 @@ class List(Monad[T], Monoidal[list]):
     __add__ = mappend
     __mul__ = __rmul__ = map
     __rshift__ = bind
+
+    def __sizeof__(self) -> int:
+        return self.value.__sizeof__()
+
+    def __len__(self) -> int:
+        return len(list(self.value))
+
+    def __iter__(self) -> Iterator[T]:
+        return iter(self.value)
