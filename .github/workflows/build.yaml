@@ -59,6 +59,7 @@ jobs:
           echo "version='${{ steps.release.outputs.tag_name }}'" >>  monads/__init__.py   
           sed -i '9s/.*/    version="${{ steps.release.outputs.tag_name }}",/' setup.py 
           black setup.py 
+          black monads/__init__.py    
       - uses: mikeal/publish-to-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
