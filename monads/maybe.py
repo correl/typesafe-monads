@@ -8,6 +8,7 @@ from typing import (
     Iterator,
     List,
     Optional,
+    Sized,
     TypeVar,
     Union,
     cast,
@@ -21,7 +22,7 @@ S = TypeVar("S")
 E = TypeVar("E")
 
 
-class Maybe(Monad[T], Iterable):
+class Maybe(Monad[T], Iterable, Sized):
     def __init__(self) -> None:  # pragma: no cover
         raise NotImplementedError
 
@@ -50,11 +51,11 @@ class Maybe(Monad[T], Iterable):
             new: Maybe[S] = Nothing()
             return new
 
-    def or_else(self, default: T) -> T:
+    def or_else(self, default: T) -> T:  # pragma: no cover
         raise NotImplementedError
 
-    def flatten(self) -> Maybe[Any]:  # TODO find a more generic signature
-        raise NotImplementedError
+    def flatten(self) -> Maybe[Any]:  # pragma: no cover
+        raise NotImplementedError  # TODO find a more generic signature
 
     @classmethod
     def sequence(cls, xs: Iterable[Maybe[T]]) -> Maybe[List[T]]:
@@ -120,7 +121,7 @@ class Just(Maybe[T]):
         return f"<Just {self.value}>"
 
     def __sizeof__(self) -> int:
-        return self.value.__sizeof__()
+        return 1
 
     def __len__(self) -> int:
         return 1

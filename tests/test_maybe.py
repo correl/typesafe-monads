@@ -129,15 +129,18 @@ def test_nothing_to_optional() -> None:
 
 
 def test_as_iterable() -> None:
-    m: Maybe[str] = Nothing()
+    m_empty: Maybe[str] = Nothing()
     i = 0
-    for n in m:
+    for n in m_empty:
         i = i + 1
     assert i == 0
 
     for n in Just("one"):
         i = i + 1
     assert i == 1
+
+    assert len(m_empty) == 0
+    assert len(Just("one")) == 1
 
 
 def test_or_else() -> None:
