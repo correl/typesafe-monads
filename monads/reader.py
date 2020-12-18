@@ -10,7 +10,7 @@ S = TypeVar("S")
 Env = TypeVar("Env")
 F = Callable[[Env], T]
 
-
+# TODO Reader Monad Eample
 class Reader(Monad[T], Generic[Env, T]):
     def __init__(self, function: F) -> None:
         update_wrapper(self, function)

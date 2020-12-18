@@ -126,3 +126,35 @@ def test_just_to_optional() -> None:
 
 def test_nothing_to_optional() -> None:
     assert None == Nothing().toOptional()
+
+
+def test_as_iterable() -> None:
+    m_empty: Maybe[str] = Nothing()
+    i = 0
+    for n in m_empty:
+        i = i + 1
+    assert i == 0
+
+    for n in Just("one"):
+        i = i + 1
+    assert i == 1
+
+    assert len(m_empty) == 0
+    assert len(Just("one")) == 1
+
+
+def test_or_else() -> None:
+    m_empty: Maybe[str] = Nothing()
+    assert m_empty.or_else("backup") == "backup"
+
+    m_full: Maybe[str] = Just("becon")
+    assert m_full.or_else("backup") == "becon"
+
+
+def test_flatten() -> None:
+    m_empty: Maybe[Maybe[str]] = Just(Nothing())
+    m_flat: Maybe[str] = m_empty.flatten()
+    assert m_flat.or_else("backup") == "backup"
+
+    m_full: Maybe[Maybe[str]] = Just(Just("becon"))
+    assert m_full.flatten().or_else("backup") == "becon"
