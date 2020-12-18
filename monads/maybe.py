@@ -1,6 +1,17 @@
 from __future__ import annotations
 import functools
-from typing import Any, Callable, Generic, Iterable, List, Optional, TypeVar
+from typing import (
+    Any,
+    Callable,
+    Generic,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    TypeVar,
+    Union,
+    cast,
+)
 from . import result
 from .monad import Monad
 from .monoid import Monoid
@@ -10,7 +21,7 @@ S = TypeVar("S")
 E = TypeVar("E")
 
 
-class Maybe(Monad[T]):
+class Maybe(Monad[T], Iterable):
     def __init__(self) -> None:  # pragma: no cover
         raise NotImplementedError
 
@@ -38,6 +49,12 @@ class Maybe(Monad[T]):
         else:
             new: Maybe[S] = Nothing()
             return new
+
+    def or_else(self, default: T) -> T:
+        raise NotImplementedError
+
+    def flatten(self) -> Maybe[Any]: #TODO find a more generic signature
+        raise NotImplementedError
 
     @classmethod
     def sequence(cls, xs: Iterable[Maybe[T]]) -> Maybe[List[T]]:
@@ -102,6 +119,26 @@ class Just(Maybe[T]):
     def __repr__(self) -> str:  # pragma: no cover
         return f"<Just {self.value}>"
 
+    def __sizeof__(self) -> int:
+        return self.value.__sizeof__()
+
+    def __len__(self) -> int:
+        return 1
+
+    def __iter__(self) -> Iterator[T]:
+        one_list: List[T] = []
+        one_list.append(self.value)
+        return iter(one_list)  # TODO lazy evaluation
+
+    def or_else(self, default: T) -> T:
+        return self.value
+
+    def flatten(self) -> Maybe[Any]:
+        if isinstance(self.value, Maybe):
+            return cast(Maybe, self.value).flatten()
+        else:
+            return Just(self.value)
+
 
 class Nothing(Maybe[T]):
     def __init__(self) -> None:
@@ -112,6 +149,22 @@ class Nothing(Maybe[T]):
 
     def __repr__(self) -> str:  # pragma: no cover
         return "<Nothing>"
+
+    def __sizeof__(self) -> int:
+        return 0
+
+    def __len__(self) -> int:
+        return 0
+
+    def __iter__(self) -> Iterator[T]:
+        empty_list: List[T] = []
+        return iter(empty_list)
+
+    def or_else(self, default: T) -> T:
+        return default
+
+    def flatten(self) -> Maybe[Any]:
+        return self
 
 
 def maybe(value: T, predicate: Optional[Callable[[T], bool]] = None) -> Maybe[T]:
