@@ -120,9 +120,6 @@ class Just(Maybe[T]):
     def __repr__(self) -> str:  # pragma: no cover
         return f"<Just {self.value}>"
 
-    def __sizeof__(self) -> int:
-        return 1
-
     def __len__(self) -> int:
         return 1
 
@@ -150,9 +147,6 @@ class Nothing(Maybe[T]):
 
     def __repr__(self) -> str:  # pragma: no cover
         return "<Nothing>"
-
-    def __sizeof__(self) -> int:
-        return 0
 
     def __len__(self) -> int:
         return 0

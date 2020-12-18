@@ -155,3 +155,6 @@ def test_flatten() -> None:
     m_empty: Maybe[Maybe[str]] = Just(Nothing())
     m_flat: Maybe[str] = m_empty.flatten()
     assert m_flat.or_else("backup") == "backup"
+
+    m_full: Maybe[Maybe[str]] = Just(Just("becon"))
+    assert m_full.flatten().or_else("backup") == "becon"
