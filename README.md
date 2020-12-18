@@ -20,6 +20,8 @@ building my own is more fun.
 
 This is a fork of the original work by  [Correl Roush](http://correl.phoenixinquis.net/)
 
+I added some utility methods to make it easier to use in my day to day code and better interate with the pythonic style ( ie _List Comprehension_ )
+
 
 ## Base Classes
 
