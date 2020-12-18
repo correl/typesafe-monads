@@ -7,4 +7,4 @@ from .result import Result, Ok, Err
 from .future import Future
 from .reader import Reader
 
-version = "v0.0.5"
+version = "v0.0.7"
