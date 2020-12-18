@@ -53,7 +53,7 @@ class Maybe(Monad[T], Iterable):
     def or_else(self, default: T) -> T:
         raise NotImplementedError
 
-    def flatten(self) -> Maybe[Any]: #TODO find a more generic signature
+    def flatten(self) -> Maybe[Any]:  # TODO find a more generic signature
         raise NotImplementedError
 
     @classmethod
