@@ -20,6 +20,21 @@ building my own is more fun.
 
 This is a fork of the original work by  [Correl Roush](http://correl.phoenixinquis.net/)
 
+I added some utility methods to make it easier to use in my day to day code and better interate with the pythonic style ( ie _List Comprehension_ )
+
+## Curring
+
+Mixing Higher order functions ( functions that return a function ) with moand is a very common programming style other functional programming languages.
+With _curry_ decorator you can transform a function in a _curried_ function: just apss some positional parameters and get back a function with the remaining ones.
+
+```python
+@curry
+def power(exp: int, base: int ) -> int:
+    return math.pow(base, exp)
+
+square_fn = power(2) # a function that returns the square of the parameter
+
+```
 
 ## Base Classes
 
@@ -161,3 +176,5 @@ Represents an asynchronous action.
 ### Reader[T]
 
 Represents the application of a function to it's argument.
+
+
