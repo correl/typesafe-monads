@@ -22,6 +22,14 @@ This is a fork of the original work by  [Correl Roush](http://correl.phoenixinqu
 
 I added some utility methods to make it easier to use in my day to day code and better interate with the pythonic style ( ie _List Comprehension_ )
 
+## Installation
+
+There is no *pipy* release  ( yet)
+
+```bash
+$ pip install git+https://github.com//sammyrulez/typesafe-monads#egg=typesafe-monads-2 
+```
+
 ## Curring
 
 Mixing Higher order functions ( functions that return a function ) with moand is a very common programming style other functional programming languages.
@@ -177,4 +185,28 @@ Represents an asynchronous action.
 
 Represents the application of a function to it's argument.
 
+## Monads as iterable
+
+It is handy to iterate over some monad contents. List is obliviously the first candidate:
+```python
+
+m_list: List[int] = List([1, 2, 4])
+for i in m_list:
+    ...
+
+#Or filter with a generator
+
+evens: List[int] = [k for k in m_list if k % 2 == 0 ]
+
+```
+
+If you want to something to happen just if a *Maybe* monad is defined
+```python
+
+for n in Just("one"):
+  ...
+
+```
+
+The same apply for *Results*
 
