@@ -171,7 +171,13 @@ failure type `E`.
 
 ### List[T]
 
-Represents a sequence of items.
+Represents a ordered sequence of items.
+
+- Also implements `Monoid`.
+
+### Set[T]
+
+Represents a unordered sequence of unique items.
 
 - Also implements `Monoid`.
 
@@ -187,7 +193,7 @@ Represents the application of a function to it's argument.
 
 ## Monads as iterable
 
-It is handy to iterate over some monad contents. List is obliviously the first candidate:
+It is handy to iterate over some monad contents. *List* is obliviously the first candidate:
 ```python
 
 m_list: List[int] = List([1, 2, 4])
