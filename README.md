@@ -196,7 +196,7 @@ Represents the application of a function to it's argument.
 It is handy to iterate over some monad contents. *List* is obliviously the first candidate:
 ```python
 
-m_list: List[int] = List([1, 2, 4])
+m_list: List[int] = List([1, 2, 4, 9])
 for i in m_list:
     ...
 
