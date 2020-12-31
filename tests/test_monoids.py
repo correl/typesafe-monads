@@ -55,3 +55,11 @@ def test_mconcat(constructor: Constructor) -> None:
     c: Monoid = construct(constructor, 3)
     expected: Monoid = a.mappend(b).mappend(c)
     assert expected == cls.mconcat([a, b, c])
+
+
+def test_immutability(constructor: Constructor) -> None:
+    a: Monoid = construct(constructor, 1)
+    with pytest.raises(AttributeError) as excinfo:
+        # this is ignore on porpouse othewise the mypy test fail. Uncomment to check the Final check with mypy
+        a.value = 2  # type: ignore
+    assert "can't set attribute" in str(excinfo.value)

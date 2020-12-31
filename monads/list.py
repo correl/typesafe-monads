@@ -27,15 +27,15 @@ class List(Monad[T], Monoidal[list]):
         return List([value])
 
     def bind(self, function: Callable[[T], List[S]]) -> List[S]:
-        return reduce(List.mappend, map(function, self.value), List.mzero())
+        return reduce(List.mappend, map(function, self._value), List.mzero())
 
     def map(self, function: Callable[[T], S]) -> List[S]:
-        return List(list(map(function, self.value)))
+        return List(list(map(function, self._value)))
 
     def apply(self, functor: List[Callable[[T], S]]) -> List[S]:
 
         return List(
-            list(chain.from_iterable([map(f, self.value) for f in functor.value]))
+            list(chain.from_iterable([map(f, self._value) for f in functor._value]))
         )
 
     @classmethod
@@ -64,7 +64,7 @@ class List(Monad[T], Monoidal[list]):
         return List(reduce(flat, self, List.mzero()))  # type: ignore
 
     def sort(self, key: Optional[str] = None, reverse: bool = False) -> List[T]:
-        lst_copy = self.value.copy()
+        lst_copy = self._value.copy()
         lst_copy.sort(key=key, reverse=reverse)  # type: ignore
         return List(lst_copy)
 
@@ -75,22 +75,22 @@ class List(Monad[T], Monoidal[list]):
             functor = uncurry(cast(CurriedBinary, func))
         else:
             functor = func
-        return reduce(functor, self.value, base_val)  # type: ignore
+        return reduce(functor, self._value, base_val)  # type: ignore
 
     __and__ = lambda other, self: List.apply(self, other)  # type: ignore
 
     def mappend(self, other: List[T]) -> List[T]:
-        return List(self.value + other.value)
+        return List(self._value + other._value)
 
     __add__ = mappend
     __mul__ = __rmul__ = map
     __rshift__ = bind
 
     def __sizeof__(self) -> int:
-        return self.value.__sizeof__()
+        return self._value.__sizeof__()
 
     def __len__(self) -> int:
-        return len(list(self.value))
+        return len(list(self._value))
 
     def __iter__(self) -> Iterator[T]:
-        return iter(self.value)
+        return iter(self._value)

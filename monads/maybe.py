@@ -176,19 +176,19 @@ class First(Monoid[Maybe[T]]):
         return First(Nothing())
 
     def mappend(self, other: First):
-        if isinstance(self.value, Just):
+        if isinstance(self._value, Just):
             return self
         else:
             return other
 
     def __repr__(self) -> str:  # pragma: no cover
-        return f"<First {self.value}>"
+        return f"<First {self._value}>"
 
     __add__ = mappend
 
 
 def first(xs: List[Maybe[T]]) -> Maybe[T]:
-    return First.mconcat(map(lambda x: First(x), xs)).value
+    return First.mconcat(map(lambda x: First(x), xs))._value
 
 
 class Last(Monoid[Maybe[T]]):
@@ -197,16 +197,16 @@ class Last(Monoid[Maybe[T]]):
         return Last(Nothing())
 
     def mappend(self, other: Last):
-        if isinstance(other.value, Just):
+        if isinstance(other._value, Just):
             return other
         else:
             return self
 
     def __repr__(self) -> str:  # pragma: no cover
-        return f"<Last {self.value}>"
+        return f"<Last {self._value}>"
 
     __add__ = mappend
 
 
 def last(xs: List[Maybe[T]]) -> Maybe[T]:
-    return Last.mconcat(map(lambda x: Last(x), xs)).value
+    return Last.mconcat(map(lambda x: Last(x), xs))._value
