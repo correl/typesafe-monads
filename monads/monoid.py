@@ -2,14 +2,14 @@ from __future__ import annotations
 from functools import reduce
 from numbers import Complex
 from decimal import Decimal
-from typing import Any, Callable, Generic, Iterator, Type, TypeVar, Union
+from typing import Any, Callable, Generic, Iterator, Type, TypeVar, Union, Final
 
 T = TypeVar("T")
 
 
 class Monoid(Generic[T]):
     def __init__(self, value: T) -> None:
-        self.value = value
+        self._value: Final[T] = value
 
     # FIXME: Other type set to Any, as the proper value (Monoid[T]) is
     # reported as incompatible with subclass implementations due to a
@@ -29,15 +29,19 @@ class Monoid(Generic[T]):
         return (
             isinstance(other, Monoid)
             and type(self) == type(other)
-            and self.value == other.value
+            and self._value == other._value
         )
 
     __add__ = mappend
 
+    @property
+    def value(self) -> T:
+        return self._value
+
 
 class Monoidal(Monoid[T]):
     def __repr__(self):  # pragma: no cover
-        return repr(self.value)
+        return repr(self._value)
 
 
 class String(Monoidal[str]):
@@ -46,7 +50,7 @@ class String(Monoidal[str]):
         return cls(str())
 
     def mappend(self, other: String) -> String:
-        return String(self.value + other.value)
+        return String(self._value + other._value)
 
     __add__ = mappend
 
@@ -57,7 +61,7 @@ class Addition(Monoidal[Union[int, float]]):
         return cls(0)
 
     def mappend(self, other: Addition) -> Addition:
-        return Addition(self.value + other.value)
+        return Addition(self._value + other._value)
 
     __add__ = mappend
 
@@ -68,6 +72,6 @@ class Multiplication(Monoidal[Union[int, float]]):
         return cls(1)
 
     def mappend(self, other: Multiplication) -> Multiplication:
-        return Multiplication(self.value * other.value)
+        return Multiplication(self._value * other._value)
 
     __add__ = mappend

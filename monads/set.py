@@ -38,15 +38,15 @@ class Set(Monad[T], Monoidal[set]):
         return Set(unpack(value))
 
     def bind(self, function: Callable[[T], Set[S]]) -> Set[S]:
-        return reduce(Set.mappend, map(function, self.value), Set.mzero())
+        return reduce(Set.mappend, map(function, self._value), Set.mzero())
 
     def map(self, function: Callable[[T], S]) -> Set[S]:
-        return Set(set(map(function, self.value)))
+        return Set(set(map(function, self._value)))
 
     def apply(self, functor: Set[Callable[[T], S]]) -> Set[S]:
 
         return Set(
-            set(chain.from_iterable([map(f, self.value) for f in functor.value]))
+            set(chain.from_iterable([map(f, self._value) for f in functor._value]))
         )
 
     @classmethod
@@ -75,7 +75,7 @@ class Set(Monad[T], Monoidal[set]):
         return Set(reduce(flat, self, Set.mzero()))  # type: ignore
 
     def sort(self, key: Optional[str] = None, reverse: bool = False) -> Set[T]:
-        lst_copy = self.value.copy()
+        lst_copy = self._value.copy()
         lst_copy.sort(key=key, reverse=reverse)  # type: ignore
         return Set(lst_copy)
 
@@ -86,22 +86,22 @@ class Set(Monad[T], Monoidal[set]):
             functor = uncurry(cast(CurriedBinary, func))
         else:
             functor = func
-        return reduce(functor, self.value, base_val)  # type: ignore
+        return reduce(functor, self._value, base_val)  # type: ignore
 
     __and__ = lambda other, self: Set.apply(self, other)  # type: ignore
 
     def mappend(self, other: Set[T]) -> Set[T]:
-        return Set(self.value.union(other.value))
+        return Set(self._value.union(other._value))
 
     __add__ = mappend
     __mul__ = __rmul__ = map
     __rshift__ = bind
 
     def __sizeof__(self) -> int:
-        return self.value.__sizeof__()
+        return self._value.__sizeof__()
 
     def __len__(self) -> int:
-        return len(set(self.value))
+        return len(set(self._value))
 
     def __iter__(self) -> Iterator[T]:
-        return iter(self.value)
+        return iter(self._value)
