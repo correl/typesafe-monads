@@ -59,6 +59,7 @@ def test_mconcat(constructor: Constructor) -> None:
 
 def test_immutability(constructor: Constructor) -> None:
     a: Monoid = construct(constructor, 1)
+    assert a.value == 1
     with pytest.raises(AttributeError) as excinfo:
         # this is ignore on porpouse othewise the mypy test fail. Uncomment to check the Final check with mypy
         a.value = 2  # type: ignore
