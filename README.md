@@ -147,6 +147,9 @@ value if the list is empty.
 
 ## Monads
 
+Wrapped values should be immutable: they are _protected_ from accidental direct writing with *Final* type and the pythonic naming convention.
+
+
 ### Maybe[T]
 
 Represents optional data. A `Maybe` instance of a certain type `T` will
