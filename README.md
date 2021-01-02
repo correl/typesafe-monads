@@ -1,6 +1,6 @@
 # Type-safe Monads
 
-[![Build Status](https://travis-ci.com/correl/typesafe-monads.svg?branch=master)](https://travis-ci.com/correl/typesafe-monads)
+![Build](https://github.com/correl/typesafe-monads/workflows/Build/badge.svg)
 [![codecov](https://codecov.io/gh/correl/typesafe-monads/branch/master/graph/badge.svg)](https://codecov.io/gh/correl/typesafe-monads)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
@@ -18,6 +18,31 @@ lack of type constraints preventing incorrect usage. I could've
 attempted to add type annotations to one of those libraries, but
 building my own is more fun.
 
+This is a fork of the original work by  [Correl Roush](http://correl.phoenixinquis.net/)
+
+I added some utility methods to make it easier to use in my day to day code and better interate with the pythonic style ( ie _List Comprehension_ )
+
+## Installation
+
+There is no *pipy* release  ( yet)
+
+```bash
+$ pip install typesafe-monads
+```
+
+## Curring
+
+Mixing Higher order functions ( functions that return a function ) with moand is a very common programming style other functional programming languages.
+With _curry_ decorator you can transform a function in a _curried_ function: just apss some positional parameters and get back a function with the remaining ones.
+
+```python
+@curry
+def power(exp: int, base: int ) -> int:
+    return math.pow(base, exp)
+
+square_fn = power(2) # a function that returns the square of the parameter
+
+```
 
 ## Base Classes
 
@@ -122,6 +147,9 @@ value if the list is empty.
 
 ## Monads
 
+Wrapped values should be immutable: they are _protected_ from accidental direct writing with *Final* type and the pythonic naming convention.
+
+
 ### Maybe[T]
 
 Represents optional data. A `Maybe` instance of a certain type `T` will
@@ -146,7 +174,13 @@ failure type `E`.
 
 ### List[T]
 
-Represents a sequence of items.
+Represents a ordered sequence of items.
+
+- Also implements `Monoid`.
+
+### Set[T]
+
+Represents a unordered sequence of unique items.
 
 - Also implements `Monoid`.
 
@@ -159,3 +193,29 @@ Represents an asynchronous action.
 ### Reader[T]
 
 Represents the application of a function to it's argument.
+
+## Monads as iterable
+
+It is handy to iterate over some monad contents. *List* is obliviously the first candidate:
+```python
+
+m_list: List[int] = List([1, 2, 4, 9])
+for i in m_list:
+    ...
+
+#Or filter with a generator
+
+evens: List[int] = [k for k in m_list if k % 2 == 0 ]
+
+```
+
+If you want to something to happen just if a *Maybe* monad is defined
+```python
+
+for n in Just("one"):
+  ...
+
+```
+
+The same apply for *Results*
+
