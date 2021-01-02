@@ -1,7 +1,7 @@
 # Type-safe Monads
 
-![Build](https://github.com/sammyrulez/typesafe-monads/workflows/Build/badge.svg)
-[![codecov](https://codecov.io/gh/sammyrulez/typesafe-monads/branch/master/graph/badge.svg)](https://codecov.io/gh/sammyrulez/typesafe-monads)
+![Build](https://github.com/correl/typesafe-monads/workflows/Build/badge.svg)
+[![codecov](https://codecov.io/gh/correl/typesafe-monads/branch/master/graph/badge.svg)](https://codecov.io/gh/correl/typesafe-monads)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 This is an experiment in building monads in Python supported by strict
@@ -27,7 +27,7 @@ I added some utility methods to make it easier to use in my day to day code and 
 There is no *pipy* release  ( yet)
 
 ```bash
-$ pip install git+https://github.com//sammyrulez/typesafe-monads#egg=typesafe-monads-2 
+$ pip install typesafe-monads
 ```
 
 ## Curring

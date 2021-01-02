@@ -12,7 +12,7 @@ setup(
     description="Type-annotated monad implementations for Python 3.7+",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/sammyrulez/typesafe-monads",
+    url="https://github.com/correl/typesafe-monads",
     packages=["monads"],
     package_data={"monads": ["py.typed"]},
     include_package_data=True,
