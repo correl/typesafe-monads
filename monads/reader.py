@@ -4,6 +4,7 @@ import inspect
 from typing import Any, Callable, Generic, Iterable, List, TypeVar
 
 from .monad import Monad
+from .tools import flip
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -58,7 +59,7 @@ class Reader(Monad[T], Generic[Env, T]):
         def mcons(acc: Reader[Env, List[T]], x: Reader[Env, T]) -> Reader[Env, List[T]]:
             return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
 
-        empty: Reader[Env, List[T]] = cls.pure([])
+        empty: Reader[Env, List[T]] = Reader.pure([])
         return reduce(mcons, xs, empty)
 
     def __eq__(self, other: object):  # pragma: no cover
@@ -72,4 +73,4 @@ class Reader(Monad[T], Generic[Env, T]):
 
     __mul__ = __rmul__ = map
     __rshift__ = bind
-    __and__ = lambda other, self: Reader.apply(self, other)
+    __rand__ = apply

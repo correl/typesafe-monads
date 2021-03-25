@@ -5,6 +5,7 @@ from typing import Callable, Iterable, List as _List, TypeVar
 
 from .monad import Monad
 from .monoid import Monoidal
+from .tools import flip
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -33,7 +34,7 @@ class List(Monad[T], Monoidal[list]):
         def mcons(acc: List[_List[T]], x: List[T]) -> List[_List[T]]:
             return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
 
-        empty: List[_List[T]] = cls.pure([])
+        empty: List[_List[T]] = List.pure([])
         return reduce(mcons, xs, empty)
 
     @classmethod
@@ -44,6 +45,6 @@ class List(Monad[T], Monoidal[list]):
         return List(self.value + other.value)
 
     __add__ = mappend
-    __and__ = lambda other, self: List.apply(self, other)
+    __rand__ = apply
     __mul__ = __rmul__ = map
     __rshift__ = bind

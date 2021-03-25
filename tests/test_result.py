@@ -7,12 +7,14 @@ from monads.result import Result, Ok, Err, safe
 
 def test_types() -> None:
     m: Result[int, str] = Result.pure(1)
+    increment: Callable[[int], int] = lambda x: x + 1
+    lifted_increment: Result[Callable[[int], int], str] = Result.pure(increment)
     map: Result[int, str] = m.map(lambda x: x)
     map_operator: Result[int, str] = m * (lambda x: x)
     bind: Result[int, str] = m.bind(lambda x: Result.pure(x))
     bind_operator: Result[int, str] = m >> (lambda x: Result.pure(x))
     apply: Result[int, str] = m.apply(Result.pure(lambda x: x))
-    apply_operator: Result[int, str] = Result.pure(lambda x: x) & m
+    apply_operator: Result[int, str] = lifted_increment & m
     sequence: Result[List[int], str] = Result.sequence([m])
 
 

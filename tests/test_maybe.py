@@ -1,18 +1,26 @@
 import pytest  # type: ignore
-from typing import Callable, List
+from typing import Callable, List, TypeVar
 
 from monads.maybe import Maybe, Just, Nothing, maybe, first, last
 from monads.result import Ok, Err
 
 
+T = TypeVar("T")
+
+
+def identity(x: T) -> T:
+    return x
+
+
 def test_types() -> None:
     m: Maybe[int] = Maybe.pure(1)
-    map: Maybe[int] = m.map(lambda x: x)
-    map_operator: Maybe[int] = m * (lambda x: x)
+    lifted_identity: Maybe[Callable[[int], int]] = Maybe.pure(identity)
+    map: Maybe[int] = m.map(identity)
+    map_operator: Maybe[int] = m * identity
     bind: Maybe[int] = m.bind(lambda x: Maybe.pure(x))
     bind_operator: Maybe[int] = m >> (lambda x: Maybe.pure(x))
-    apply: Maybe[int] = m.apply(Maybe.pure(lambda x: x))
-    apply_operator: Maybe[int] = Maybe.pure(lambda x: x) & m
+    apply: Maybe[int] = m.apply(Maybe.pure(identity))
+    apply_operator: Maybe[int] = lifted_identity & m
     sequence: Maybe[List[int]] = Maybe.sequence([m])
 
 

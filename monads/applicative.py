@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Any, Callable, TypeVar
 
 from .functor import Functor
+from .tools import flip
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -16,7 +17,5 @@ class Applicative(Functor[T]):
     # (Functor[Callable[[T], S]]) is reported as incompatible with subclass
     # implementations due to a flaw in mypy:
     # https://github.com/python/mypy/issues/1317
-    def apply(self, functor: Any) -> Functor[S]:  # pragma: no cover
+    def apply(self, functor: Functor[Callable[[T], S]]) -> Functor[S]:  # pragma: no cover
         raise NotImplementedError
-
-    __and__ = lambda other, self: Applicative.apply(self, other)

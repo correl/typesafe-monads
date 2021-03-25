@@ -4,6 +4,7 @@ from typing import Any, Callable, Generic, Iterable, List, Optional, TypeVar
 from . import result
 from .monad import Monad
 from .monoid import Monoid
+from .tools import flip
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -46,7 +47,7 @@ class Maybe(Monad[T]):
         def mcons(acc: Maybe[List[T]], x: Maybe[T]) -> Maybe[List[T]]:
             return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
 
-        empty: Maybe[List[T]] = cls.pure([])
+        empty: Maybe[List[T]] = Maybe.pure([])
         return functools.reduce(mcons, xs, empty)
 
     def withDefault(self, default: T) -> T:
@@ -86,8 +87,15 @@ class Maybe(Monad[T]):
             return Nothing()
 
     __rshift__ = bind
-    __and__ = lambda other, self: Maybe.apply(self, other)
     __mul__ = __rmul__ = map
+
+    def __and__(self: Maybe[Callable[[T], S]], other: Maybe[T]) -> Maybe[S]:
+        if isinstance(self, Just) and not callable(self.value):
+            return NotImplemented
+        return other.apply(self)
+
+    def __rand__(self, functor: Maybe[Callable[[T], S]]) -> Maybe[S]:
+        return self.apply(functor)
 
 
 class Just(Maybe[T]):

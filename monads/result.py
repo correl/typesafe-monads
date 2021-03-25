@@ -4,6 +4,7 @@ from typing import Any, Callable, Generic, Iterable, List, Optional, TypeVar
 
 from . import maybe
 from .monad import Monad
+from .tools import flip
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -60,7 +61,7 @@ class Result(Monad[T], Generic[T, E]):
         def mcons(acc: Result[List[T], E], x: Result[T, E]) -> Result[List[T], E]:
             return acc.bind(lambda acc_: x.map(lambda x_: acc_ + [x_]))
 
-        empty: Result[List[T], E] = cls.pure([])
+        empty: Result[List[T], E] = Result.pure([])
         return functools.reduce(mcons, xs, empty)
 
     def withDefault(self, default: T) -> T:
@@ -90,7 +91,23 @@ class Result(Monad[T], Generic[T, E]):
             return None
 
     __rshift__ = bind
-    __and__ = lambda other, self: Result.apply(self, other)
+
+    def and(self: Result[Callable[[T], S], E], other: Result[T, E]) -> Result[S, E]:
+        if isinstance(self, Ok) and not callable(self.value):
+            return other.rand(self)
+        return other.apply(self)
+
+    def rand(self, functor: Result[Callable[[T], S], E]) -> Result[S, E]:
+        return self.apply(functor)
+
+    def __and__(self: Result[Callable[[T], S], E], other: Result[T, E]) -> Result[S, E]:
+        if isinstance(self, Ok) and not callable(self.value):
+            return NotImplemented
+        return other.apply(self)
+
+    def __rand__(self, functor: Result[Callable[[T], S], E]) -> Result[S, E]:
+        return self.apply(functor)
+
     __mul__ = __rmul__ = map
 
 

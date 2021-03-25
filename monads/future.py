@@ -2,6 +2,7 @@ from __future__ import annotations
 import functools
 from typing import Awaitable, Callable, Iterable, List, TypeVar, Union
 from .monad import Monad
+from .tools import flip
 
 T = TypeVar("T")
 S = TypeVar("S")
@@ -54,12 +55,12 @@ class Future(Monad[T]):
             future: Future[T] = x if isinstance(x, Future) else Future(x)
             return acc.bind(lambda acc_: future.map(lambda x_: acc_ + [x_]))
 
-        empty: Future[List[T]] = cls.pure([])
+        empty: Future[List[T]] = Future.pure([])
         return functools.reduce(mcons, xs, empty)
 
     def __await__(self):
         return self.awaitable.__await__()
 
     __rshift__ = bind
-    __and__ = lambda other, self: Future.apply(self, other)
+    __rand__ = apply
     __mul__ = __rmul__ = map
